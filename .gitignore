@@ -110,8 +110,6 @@ local.properties
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-.idea
-
 # User-specific stuff:
 .idea/workspace.xml
 .idea/tasks.xml
@@ -265,9 +263,9 @@ $RECYCLE.BIN/
 ### Intellij+iml Patch ###
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023 
 
-*.iml
-modules.xml
-.idea/misc.xml 
+#*.iml
+#modules.xml
+#.idea/misc.xml
 *.ipr
 
 

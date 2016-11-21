@@ -289,3 +289,4 @@ hs_err_pid*
 
 ### Project specific ###
 /src/main/resources/static/
+/src/main/resources/application.properties

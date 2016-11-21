@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import se.secure.foliechatt.domain.User;
 
+import java.util.List;
+
 
 @Service
 public class UserService {
@@ -15,6 +17,11 @@ public class UserService {
 
     public User saveUser(User user) {
         return repo.save(user);
+    }
+
+
+    public List<User> getAll() {
+        return repo.findAll();
     }
 
 }

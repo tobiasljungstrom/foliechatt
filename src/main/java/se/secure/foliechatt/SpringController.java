@@ -1,9 +1,11 @@
+package se.secure.foliechatt;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.stereotype.Controller;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Controller
-@EnableAutoConfiguration
+@SpringBootApplication
+// @EnableAutoConfiguration
 public class SpringController {
 
     public static void main(String[] args) throws Exception {

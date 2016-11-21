@@ -27,7 +27,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="foliechatt" target="1.6" />
-      <module name="foliechatt2" target="1.6" />
+      <module name="foliechatt2" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

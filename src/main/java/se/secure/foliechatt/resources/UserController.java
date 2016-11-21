@@ -1,6 +1,5 @@
 package se.secure.foliechatt.resources;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,4 +31,5 @@ public class UserController {
         HttpStatus status = success ? HttpStatus.GONE : HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(new User());
     }
+
 }

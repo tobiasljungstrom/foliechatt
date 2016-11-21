@@ -16,16 +16,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /*
+     * @CrossOrigin allows the webpack dev server to access the methods from a different port than the server.
+     * Should be removed for release.
+     */
+
+    @CrossOrigin
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
 
+    @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
+    @CrossOrigin
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
         Boolean success = userService.deleteUser(id);

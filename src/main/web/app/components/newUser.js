@@ -5,13 +5,28 @@ var NewUser = React.createClass({
     submitNewUser: function() {
         const newUserForm = document.getElementById('newUserForm');
 
-        const alias = newUserForm.elements['aliasInput'];
-        const email = newUserForm.elements['emailInput'];
-        const password = newUserForm.elements['passwordInput'];
+        //Collect the form data
+        const alias = newUserForm.elements['aliasInput'].value;
+        const email = newUserForm.elements['emailInput'].value;
+        const password = newUserForm.elements['passwordInput'].value;
 
-        console.log(alias.value + ' ' + email.value + ' ' + password.value);
+        //Create the data object that will be sent to the backend
+        const data = {
+            alias:alias
+        }
 
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //Callback triggers on success
+            //TODO: Do something useful here
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+            }
 
+        }
+        request.open("POST", "http://localhost:9876/foliechatt/api/v.1/users", true);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(JSON.stringify(data));
     },
 
     render: function() {
@@ -34,7 +49,7 @@ var NewUser = React.createClass({
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" onClick={this.submitNewUser}/></td>
+                            <td><input type="button" onClick={this.submitNewUser} value="Submit"/></td>
                         </tr>
                     </tbody>
                 </table>

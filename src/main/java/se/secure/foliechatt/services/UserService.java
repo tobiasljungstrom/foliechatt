@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import se.secure.foliechatt.domain.LoginAttemptDTO;
 import se.secure.foliechatt.domain.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 
@@ -15,6 +18,8 @@ public class UserService {
 
     @Autowired
     UserRepository repo;
+    @Autowired
+    EntityManager em;
 
     public User saveUser(User user) {
         // TODO hash/salt handling
@@ -35,7 +40,22 @@ public class UserService {
     }
 
     public boolean isAuthorizedForLogin(LoginAttemptDTO loginAttempt) {
-        return repo.isAuthorizedForLogin(loginAttempt);
+        TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
+        query.setParameter("email", loginAttempt.getEmail());
+        List<User> result = query.getResultList();
+
+        System.out.println("result size is: " + result.size());
+        // edge cases
+        if(result.isEmpty()) {
+            return false;
+        } else if(result.size() > 1) {
+            throw new RuntimeException("");
+        }
+
+        // actual password check
+        System.out.println("result pass = " + result.get(0).getPassword());
+        System.out.println("try pass = " + loginAttempt.getPassword());
+        return result.get(0).getPassword().equals(loginAttempt.getPassword());
     }
 
 }

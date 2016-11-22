@@ -4,6 +4,9 @@ package se.secure.foliechatt.domain;
 import javax.persistence.*;
 
 @Entity
+@NamedQueries(
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
+)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -5,8 +5,8 @@ var LogIn = require('./logIn');
 var ChatRoom = require('./chatRoom');
 
 var App = React.createClass({
-  users: ["Pelle", "Kalle"],
-  messages: [{user: "Pelle", message: "YOYO där"}],
+    users: ['Pelle', 'Kalle'],
+    messages: [{user: 'Pelle', message: 'YOYO där'}],
     render: function() {
         return (
             <div>

@@ -11,9 +11,11 @@ var NewUser = React.createClass({
         const password = newUserForm.elements['passwordInput'].value;
 
         //Create the data object that will be sent to the backend
-        const data = {
-            alias:alias
-        }
+        const data = JSON.stringify({
+            alias:alias,
+            email: email,
+            password: password
+        });
 
         const request = new XMLHttpRequest();
         request.onreadystatechange = function() {
@@ -26,7 +28,7 @@ var NewUser = React.createClass({
         }
         request.open("POST", "http://localhost:9876/foliechatt/api/v.1/users", true);
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify(data));
+        request.send(data);
     },
 
     render: function() {

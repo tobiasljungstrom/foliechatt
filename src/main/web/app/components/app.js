@@ -6,7 +6,7 @@ var LogIn = require('./logIn');
 
 var App = React.createClass({
   users: ["Pelle", "Kalle"],
-  messages: [{user: "Pelle", message: "YOYO där"}],
+  messages: [{user: "Pelle", message: "YOYO där"}, {user: "Kalle", message: "Görbra där"}],
     render: function() {
         return (
             <div>

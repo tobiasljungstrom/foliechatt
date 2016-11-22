@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/vintr/foliechatt.git"
+    "url": "git+https://gitlab.com/vintr/foliechatt.git"
   },
   "description": "A secure encrypted chat application",
   "main": "index.js",
@@ -27,7 +27,14 @@
     "eslint-plugin-react": "^6.7.1",
     "eslint-plugin-standard": "^2.0.1",
     "html-webpack-plugin": "^2.24.1",
+    "sockjs": "^0.3.18",
+    "stomp": "^0.1.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
-  }
+  },
+  "bugs": {
+    "url": "https://gitlab.com/vintr/foliechatt/issues"
+  },
+  "homepage": "https://gitlab.com/vintr/foliechatt#README",
+  "keywords": []
 }

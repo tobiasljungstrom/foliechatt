@@ -49,7 +49,7 @@ public class UserService {
         if(result.isEmpty()) {
             return false;
         } else if(result.size() > 1) {
-            throw new RuntimeException("");
+            throw new RuntimeException("multiple users with the same email!");
         }
 
         // actual password check

@@ -9,6 +9,7 @@ import se.secure.foliechatt.domain.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 
@@ -39,19 +40,22 @@ public class UserService {
     }
 
     public boolean isAuthorizedForLogin(LoginAttemptDTO loginAttempt) {
-        Query query = em.createQuery("User.findByEmail", List.class);
+        TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", loginAttempt.getEmail());
         List<User> result = query.getResultList();
 
+        System.out.println("result size is: " + result.size());
         // edge cases
         if(result.isEmpty()) {
             return false;
         } else if(result.size() > 1) {
-            throw new RuntimeException("");
+            throw new RuntimeException("multiple users with the same email!");
         }
 
         // actual password check
-        return result.get(0).getPassword() == loginAttempt.getPassword();
+        System.out.println("result pass = " + result.get(0).getPassword());
+        System.out.println("try pass = " + loginAttempt.getPassword());
+        return result.get(0).getPassword().equals(loginAttempt.getPassword());
     }
 
 }

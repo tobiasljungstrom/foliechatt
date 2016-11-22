@@ -1,10 +1,12 @@
 var React = require('react');
 
+var NewUser = require('./newuser');
+
 var App = React.createClass({
     render: function() {
         return (
             <div>
-                Hello React.
+                <NewUser />
             </div>
         );
     }

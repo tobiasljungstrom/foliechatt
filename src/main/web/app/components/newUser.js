@@ -22,12 +22,12 @@ var NewUser = React.createClass({
             //Callback triggers on success
             //TODO: Do something useful here
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
+                //console.log(this.responseText);
             }
 
-        }
-        request.open("POST", "http://localhost:9876/foliechatt/api/v.1/users", true);
-        request.setRequestHeader("Content-Type", "application/json");
+        };
+        request.open('POST', 'http://localhost:9876/foliechatt/api/v.1/users', true);
+        request.setRequestHeader('Content-Type', 'application/json');
         request.send(data);
     },
 

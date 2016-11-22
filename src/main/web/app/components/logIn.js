@@ -3,7 +3,7 @@ var React = require('react');
 var LogIn = React.createClass({
 
     logIn: function() {
-        console.log("Log in clicked");
+        //console.log("Log in clicked");
     },
 
     render: function() {

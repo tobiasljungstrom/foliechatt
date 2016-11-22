@@ -4,19 +4,19 @@
 var React = require('react');
 
 var ChatMessage = React.createClass({
-  propTypes : {
-    userName: React.PropTypes.string,
-    messageText: React.PropTypes.string
-  },
+    propTypes: {
+        userName: React.PropTypes.string,
+        messageText: React.PropTypes.string
+    },
 
-  render: function() {
-    return (
-      <li>
-        <span>{this.props.userName}</span>
-        <span>{this.props.messageText}</span>
-      </li>
-    );
-  }
-})
+    render: function() {
+        return (
+            <li>
+                <span>{this.props.userName}</span>
+                <span>{this.props.messageText}</span>
+            </li>
+        );
+    }
+});
 
 module.exports = ChatMessage;

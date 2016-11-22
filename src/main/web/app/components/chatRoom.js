@@ -8,6 +8,16 @@ var ChatRoom = React.createClass({
         messages: React.PropTypes.arrayOf(React.PropTypes.shape({user: React.PropTypes.string, message: React.PropTypes.string}))
     },
 
+    sendMessage: function() {
+        const chatForm = document.getElementById('chatForm');
+        const message = chatForm.elements('messageInput').value;
+        //TODO create message for each receiver, enrypt with receivers public key
+        var messageToSend = {
+            user: {userName: 'KalleTestare'},
+            messageText: message
+        }
+    },
+
     render: function() {
         var messages = [];
         for(let i=0; i<this.props.messages.length; i++){
@@ -19,9 +29,9 @@ var ChatRoom = React.createClass({
                 <ul>
                     {messages}
                 </ul>
-                <form>
-                    <input type="text" name="message"/>
-                <input type="button" value="Send"/>
+                <form id="chatForm">
+                    <input type="text" name="messageInput"/>
+                <input onClick={} type="button" value="Send"/>
                 </form>
             </div>
         );

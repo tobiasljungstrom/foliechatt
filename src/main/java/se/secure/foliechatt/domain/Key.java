@@ -4,6 +4,9 @@ public class Key {
 
 
     public Key() {}
+    public Key(String value) {
+        this.value = value;
+    }
 
     private String value;
 

@@ -7,6 +7,7 @@ var Stomp = require("stompjs/lib/stomp.js").Stomp
 
 console.log("stomp is: " + JSON.stringify(Stomp))
 var stompClient =  null;
+var socket = null;
 window.stompClient = stompClient;
 var ChatRoom = React.createClass({
     propTypes : {
@@ -18,42 +19,73 @@ var ChatRoom = React.createClass({
         }))
     },
 
-    render: function() {
+    getValueFromInputWithId: function(id) {
+        return document.getElementById(id).value;
+    },
 
-        //var socket = new SockJS('http://localhost:9876/folieSocket');
-        var socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
-        stompClient = Stomp.over(socket);
-        console.log("stomp.over..  stompClient is: ", stompClient)
+    sendToRoom: function() {
+        var roomID = this.getValueFromInputWithId("room");
+        var sender = this.getValueFromInputWithId("sender");
+        var receiver = this.getValueFromInputWithId("receiver");
+        var message = this.getValueFromInputWithId("message");
+        this.subscribeTo(roomID + "/" + sender);
+        this.subscribeTo(roomID + "/status");
+
+        setTimeout(
+            function() {
+                stompClient.send("/app/hello/" +roomID, {}, JSON.stringify(
+                    { // Message
+                        content: message,
+                        sender: { value: sender},
+                        receiver: { value: receiver}
+
+                    }));
+            }, 1600
+        );
+    },
+
+    subscribeTo: function(roomOrRoomSlashStatus) {
         stompClient.connect({}, function (frame) {
             // setConnected(true);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/greetings', function (greeting) {
+            stompClient.subscribe('/topic/greetings/' + roomOrRoomSlashStatus , function (greeting) {
                 // showGreeting(JSON.parse(greeting.body).content);
                 console.log("Received greeting " + greeting)
             });
         });
+    },
 
-        setTimeout( function() {
-            stompClient.send("/app/hello", {}, JSON.stringify(
-                {
-                    content:"Hello from client!",
-                    sender: { value: "1"},
-                    receiver: { value: "2"}
+    render: function() {
 
-                }))
-        }, 5000
-        );
-
-
-
+        //var socket = new SockJS('http://localhost:9876/folieSocket');
+        socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
+        stompClient = Stomp.over(socket);
+/*        console.log("stomp.over..  stompClient is: ", stompClient)
+        stompClient.connect({}, function (frame) {
+            // setConnected(true);
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/greetings/500', function (greeting) {
+                // showGreeting(JSON.parse(greeting.body).content);
+                console.log("Received greeting " + greeting)
+            });
+        });*/
 
 
         return (
             <div className="chatRoom">
                 <ul>
                     <ChatMessage userName={this.props.messages[0].user} messageText={this.props.messages[0].message}/>
-
                 </ul>
+
+                <p>Sender</p>
+                <input name="sender" id="sender" type="text"/>
+                <p>Receiver</p>
+                <input name="receiver" id="receiver" type="text"/>
+                <p>Message</p>
+                <input name="message" id="message" type="text"/>
+                <p>Room</p>
+                <input id="room" type="text"/>
+                <button onClick={this.sendToRoom}>Send</button>
 
 
             </div>

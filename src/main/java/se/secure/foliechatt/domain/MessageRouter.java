@@ -14,7 +14,7 @@ public class MessageRouter {
         System.out.println("inside greeting method!");
         System.out.println("message has sender: " + message.getSender().getValue());
         System.out.println("message has receiver: " + message.getReceiver().getValue());
-        message.setContent("Hello, " + message.getContent());
+        message.setContent(message.getContent());
 
         // TODO logic based on receiver
         //sendTo(message.getReceiver())

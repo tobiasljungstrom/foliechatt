@@ -8,7 +8,8 @@ var stompClient = null;
 var ChatRoom = React.createClass({
     propTypes: {
         users: React.PropTypes.array.isRequired,
-        messages: React.PropTypes.array.isRequired
+        messages: React.PropTypes.array.isRequired,
+        updateChat: React.PropTypes.func
     },
 
     sendMessage: function() {
@@ -16,7 +17,7 @@ var ChatRoom = React.createClass({
         stompClient.send('/app/hello', {}, JSON.stringify({
             content: content,
             sender: {
-                value: 'default sender'
+                value: 'Mr J'
             },
             receiver: {
                 value: 'default receiver'
@@ -26,14 +27,21 @@ var ChatRoom = React.createClass({
     },
 
     componentWillMount: function() {
-        var socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
+
+        const updateChat = this.props.updateChat;
+
+        const socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
         stompClient = Stomp.over(socket);
         stompClient.debug = null;
 
         stompClient.connect({}, function() {
             stompClient.subscribe('/topic/greetings', function(message) {
-                //Callback on message from the socket
-                console.log(JSON.parse(message.body));
+
+                let messageBody = JSON.parse(message.body);
+                let content = messageBody.content;
+                let user = messageBody.sender.value;
+
+                updateChat(content, user);
             });
         });
     },

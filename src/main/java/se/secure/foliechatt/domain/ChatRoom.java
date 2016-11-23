@@ -20,8 +20,17 @@ public class ChatRoom {
     }
 
     public boolean addUserIfNotPresent(Key key) {
-        boolean doesNotExists = roomUsers.get(key) == null;
+        //boolean doesNotExists = !roomUsers.containsKey(key);
+
+        Boolean u = roomUsers.containsKey(key.getValue());
+
+        // roomUsers.containsKey(key);
+
+        boolean doesNotExists =  roomUsers.keySet().stream()
+                .filter(k -> k.getValue().equals(key.getValue()))
+                .count() == 0l;
         if(doesNotExists) {
+            System.out.println("adding user with key " + key.getValue() + " to chatroom with id " + id);
             addUser(key, new User());
             return true;
         } else {

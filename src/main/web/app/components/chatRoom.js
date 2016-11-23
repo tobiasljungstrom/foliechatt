@@ -4,6 +4,7 @@ var ChatMessage = require('./chatMessage');
 
 var SockJS = require("sockjs-client")
 var Stomp = require("stompjs/lib/stomp.js").Stomp
+
 console.log("stomp is: " + JSON.stringify(Stomp))
 var stompClient =  null;
 window.stompClient = stompClient;
@@ -20,8 +21,9 @@ var ChatRoom = React.createClass({
     render: function() {
 
         //var socket = new SockJS('http://localhost:9876/folieSocket');
-        var socket = new SockJS('http://localhost:9876/folieSocket');
+        var socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
         stompClient = Stomp.over(socket);
+        console.log("stomp.over..  stompClient is: ", stompClient)
         stompClient.connect({}, function (frame) {
             // setConnected(true);
             console.log('Connected: ' + frame);
@@ -31,7 +33,16 @@ var ChatRoom = React.createClass({
             });
         });
 
-        // stompClient.send("/app/hello", {}, JSON.stringify({}));
+        setTimeout( function() {
+            stompClient.send("/app/hello", {}, JSON.stringify(
+                {
+                    content:"Hello from client!",
+                    sender: { value: "1"},
+                    receiver: { value: "2"}
+
+                }))
+        }, 5000
+        );
 
 
 

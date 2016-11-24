@@ -15,16 +15,18 @@ var ChatRoom = React.createClass({
 
     sendMessage: function() {
         const content = document.getElementById('messageInput').value;
-        stompClient.send('/app/hello/500', {}, JSON.stringify({
-            content: content,
-            sender: {
-                value: 'Bob'
-            },
-            receiver: {
-                value: 'Bob'
-            }
-
-        }));
+        const users = this.props.users;
+        for(let i=0; i<users.length; i++){
+            stompClient.send('/app/hello/500', {}, JSON.stringify({
+                content: content,
+                sender: {
+                    value: 'abc'
+                },
+                receiver: {
+                    value: users[i].publicKey
+                }
+            }));
+        }
     },
 
     handleNewUser: function() {
@@ -42,7 +44,7 @@ var ChatRoom = React.createClass({
         // stompClient.debug = null;
 
         stompClient.connect({}, function() {
-            stompClient.subscribe('/topic/greetings/500/Bob', function(message) {
+            stompClient.subscribe('/topic/greetings/500/abc', function(message) {
 
                 let messageBody = JSON.parse(message.body);
                 let content = messageBody.content;

@@ -16,17 +16,18 @@ var ChatRoom = React.createClass({
     sendMessage: function() {
         const content = document.getElementById('messageInput').value;
         const users = this.props.users;
-        for(let i=0; i<users.length; i++){
+
+        users.forEach( ({publicKey}) => {
             stompClient.send('/app/hello/500', {}, JSON.stringify({
                 content: content,
                 sender: {
                     value: 'abc'
                 },
                 receiver: {
-                    value: users[i].publicKey
+                    value: publicKey
                 }
             }));
-        }
+        } )
     },
 
     handleNewUser: function() {

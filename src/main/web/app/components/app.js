@@ -18,10 +18,22 @@ var App = React.createClass({
         };
     },
 
-    updateChat: function(message, user) {
-        console.log('Updating chat...');
+    updateChat: function(message, key) {
         let updatedMessages = this.state.messages;
-        updatedMessages.push({message: message, user: user});
+        let users = this.state.users;
+
+        let userAlias = "default name";
+        for(let i = 0; i < users.length; i++) {
+            let user = users[i];
+            console.log("user in loop", user);
+            if(user.publicKey === key) {
+                console.log("loop true");
+                userAlias = users[i].userAlias;
+                break;
+            }
+        }
+        console.log("user alias", userAlias);
+        updatedMessages.push({message: message, user: userAlias});
 
         this.setState({
             messages: updatedMessages

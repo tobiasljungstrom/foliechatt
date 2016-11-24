@@ -33,7 +33,7 @@ public class ChatRoom {
                 .count() == 0l;
         if(doesNotExists) {
             System.out.println("adding user with publicKey " + publicKey.getValue() + " to chatroom with id " + id);
-            addUser(publicKey, new User());
+            addUser(publicKey, new User("Bob"));
             return true;
         } else {
             // nothing added, did exist

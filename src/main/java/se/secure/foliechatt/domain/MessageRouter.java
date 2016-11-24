@@ -33,7 +33,7 @@ public class MessageRouter {
         System.out.println("inside greeting method!");
         System.out.println("message has sender: " + message.getSender().getValue());
         System.out.println("message has receiver: " + message.getReceiver().getValue());
-        message.setContent("Hello, " + message.getContent());
+        message.setContent(message.getContent());
 
         Optional<ChatRoom> maybeChatRoom = chatRoomManager.getChatRoomById(roomID);
         ChatRoom chatRoom = maybeChatRoom.orElseThrow( () -> new RuntimeException("Tried to send message chat room that doesn't exist"));

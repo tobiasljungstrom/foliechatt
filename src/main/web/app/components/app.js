@@ -28,12 +28,21 @@ var App = React.createClass({
         });
     },
 
+    newUser: function(user) {
+        let updatedUsers = this.state.users;
+        updatedUsers.push(user);
+
+        this.setState({
+            users: updatedUsers
+        });
+    },
+
     render: function() {
         return (
             <div>
                 <NewUser/>
                 <LogIn/>
-                <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat}/>
+                <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat} newUser={this.newUser}/>
             </div>
         );
     }

@@ -9,7 +9,8 @@ var ChatRoom = React.createClass({
     propTypes: {
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
-        updateChat: React.PropTypes.func
+        updateChat: React.PropTypes.func,
+        newUser: React.PropTypes.func
     },
 
     sendMessage: function() {
@@ -24,6 +25,11 @@ var ChatRoom = React.createClass({
             }
 
         }));
+    },
+
+    handleNewUser: function() {
+        let user = 'Bubba';
+        this.props.newUser(user);
     },
 
     componentWillMount: function() {
@@ -48,18 +54,30 @@ var ChatRoom = React.createClass({
 
     render: function() {
         var renderMessages = [];
+        var usersInRoom= [];
 
-        for (var i = 0; i < this.props.messages.length; i++) {
+        for (let i = 0; i < this.props.messages.length; i++) {
             renderMessages[i] = <ChatMessage userName={this.props.messages[i].user} messageText={this.props.messages[i].message} key={i}/>;
+        }
+
+        for (let i = 0; i < this.props.users.length; i++) {
+            usersInRoom[i] = <li key={i}>{this.props.users[i]}</li>;
         }
 
         return (
             <div className="chatRoom">
+                Users in room:
+                <ul>
+                    {usersInRoom}
+                </ul>
+
+                Chat:
                 <ul>
                     {renderMessages}
                 </ul>
                 <input type="text" id="messageInput"/>
                 <button onClick={this.sendMessage}>Send!</button>
+                <button onClick={this.handleNewUser}>New User</button>
             </div>
         );
 

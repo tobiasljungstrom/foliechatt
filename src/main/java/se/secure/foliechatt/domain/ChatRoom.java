@@ -8,7 +8,7 @@ public class ChatRoom {
     //TODO MAKE GUEST LIST
     private Long id;
     private String name;
-    private Map<Key, User> roomUsers;
+    private Map<PublicKey, User> roomUsers;
 
     public ChatRoom() {
         this(null);
@@ -16,22 +16,22 @@ public class ChatRoom {
     // testing
     public ChatRoom(Long id) {
         this.id = id;
-        roomUsers = new HashMap<Key, User>();
+        roomUsers = new HashMap<PublicKey, User>();
     }
 
-    public boolean addUserIfNotPresent(Key key) {
-        //boolean doesNotExists = !roomUsers.containsKey(key);
+    public boolean addUserIfNotPresent(PublicKey publicKey) {
+        //boolean doesNotExists = !roomUsers.containsKey(publicKey);
 
-        Boolean u = roomUsers.containsKey(key.getValue());
+        Boolean u = roomUsers.containsKey(publicKey.getValue());
 
-        // roomUsers.containsKey(key);
+        // roomUsers.containsKey(publicKey);
 
         boolean doesNotExists =  roomUsers.keySet().stream()
-                .filter(k -> k.getValue().equals(key.getValue()))
+                .filter(k -> k.getValue().equals(publicKey.getValue()))
                 .count() == 0l;
         if(doesNotExists) {
-            System.out.println("adding user with key " + key.getValue() + " to chatroom with id " + id);
-            addUser(key, new User());
+            System.out.println("adding user with publicKey " + publicKey.getValue() + " to chatroom with id " + id);
+            addUser(publicKey, new User());
             return true;
         } else {
             // nothing added, did exist
@@ -40,9 +40,9 @@ public class ChatRoom {
 
     }
 
-    public User addUser(Key key, User value) {
-        roomUsers.put(key, value);
-        return roomUsers.put(key, value);
+    public User addUser(PublicKey publicKey, User value) {
+        roomUsers.put(publicKey, value);
+        return roomUsers.put(publicKey, value);
     }
 
     public User remove(Object key) {
@@ -65,11 +65,11 @@ public class ChatRoom {
         this.name = name;
     }
 
-    public Map<Key, User> getRoomUsers() {
+    public Map<PublicKey, User> getRoomUsers() {
         return roomUsers;
     }
 
-    public void setRoomUsers(Map<Key, User> roomUsers) {
+    public void setRoomUsers(Map<PublicKey, User> roomUsers) {
         this.roomUsers = roomUsers;
     }
 }

@@ -1,12 +1,12 @@
 package se.secure.foliechatt.domain;
 
-public class Key {
+public class PublicKey {
 
     private String value;
 
-    public Key() {}
+    public PublicKey() {}
 
-    public Key(String value) {
+    public PublicKey(String value) {
         this.value = value;
     }
 
@@ -16,5 +16,10 @@ public class Key {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

@@ -4,11 +4,11 @@ Server/client structure and method for encryption
 
 - A client can request a new chat room and automatically connect to it. Other users can then connect to the same chat room
 
-- When any user connects to a chat room they generate a public/private key pair. The public key is sent to the server. The server keeps all the public keys for a particular chat room in a collection. This collection is distibuted to all users in the chat room.
+- When any user connects to a chat room they generate a public/private publicKey pair. The public publicKey is sent to the server. The server keeps all the public keys for a particular chat room in a collection. This collection is distibuted to all users in the chat room.
 
-- When a user wants to send a message to the chat room, they use the collection of public keys to encrypt their message once for each recipient. All these encrypted messages are then sent to the server along with a copy of the key used in respective encryption.
+- When a user wants to send a message to the chat room, they use the collection of public keys to encrypt their message once for each recipient. All these encrypted messages are then sent to the server along with a copy of the publicKey used in respective encryption.
 
 - The server recieves the encrypted messages and, based on the enclosed public keys, distributes the encrypted messages to the appropriate recievers.
 
-- The recieving client decrypts the message using their private key, and the message is displayed in their ui.
+- The recieving client decrypts the message using their private publicKey, and the message is displayed in their ui.
 

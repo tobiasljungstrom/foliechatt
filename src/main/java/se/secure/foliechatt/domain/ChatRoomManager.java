@@ -11,12 +11,12 @@ public class ChatRoomManager {
         chatRooms = new ArrayList<>();
 
         ChatRoom r1 = new ChatRoom(new Long(500));
-        r1.addUser(new Key("Erik"), new User());
-        r1.addUser(new Key("Henrik"), new User());
+        r1.addUser(new PublicKey("Erik"), new User());
+        r1.addUser(new PublicKey("Henrik"), new User());
 
         ChatRoom r2 = new ChatRoom(new Long(555));
-        r2.addUser(new Key("Olle"), new User());
-        r2.addUser(new Key("Pelle"), new User());
+        r2.addUser(new PublicKey("Olle"), new User());
+        r2.addUser(new PublicKey("Pelle"), new User());
 
         chatRooms.add(r1);
         chatRooms.add(r2);

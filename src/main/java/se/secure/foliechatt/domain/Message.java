@@ -2,29 +2,29 @@ package se.secure.foliechatt.domain;
 
 public class Message {
 
-    private Key sender;
+    private PublicKey sender;
 
-    private Key receiver;
+    private PublicKey receiver;
 
     private String content;
 
     public Message() {
     }
 
-    public Key getSender() {
+    public PublicKey getSender() {
         return sender;
     }
 
-    public void setSender(Key sender) {
+    public void setSender(PublicKey sender) {
         this.sender = sender;
     }
 
 
-    public Key getReceiver() {
+    public PublicKey getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(Key receiver) {
+    public void setReceiver(PublicKey receiver) {
         this.receiver = receiver;
     }
 

@@ -41,7 +41,7 @@ public class MessageRouter {
 
         if(wasAdded) {
             System.out.println("returning updated list of users to /status");
-            simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/status", chatRoom.getRoomUsers() );
+            simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/status", chatRoom.getUsers() );
         }
 
         System.out.println("forwarding message to " + message.getReceiver().getValue());

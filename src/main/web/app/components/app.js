@@ -8,7 +8,7 @@ var App = React.createClass({
 
     getInitialState: function() {
         return {
-            users: ['John'],
+            users: [{userAlias: 'John', publicKey: "abc"}],
             messages: [
                 {
                     user: 'John',

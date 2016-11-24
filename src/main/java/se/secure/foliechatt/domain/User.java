@@ -14,6 +14,14 @@ public class User {
     private String alias;
     private String email;
 
+    public User() {
+    }
+
+    public User(String alias) {
+        this.alias = alias;
+
+    }
+
     public String getEmail() {
         return email;
     }

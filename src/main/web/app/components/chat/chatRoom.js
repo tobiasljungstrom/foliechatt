@@ -15,13 +15,13 @@ var ChatRoom = React.createClass({
 
     sendMessage: function() {
         const content = document.getElementById('messageInput').value;
-        stompClient.send('/app/hello', {}, JSON.stringify({
+        stompClient.send('/app/hello/500', {}, JSON.stringify({
             content: content,
             sender: {
-                value: 'Mr J'
+                value: 'Bob'
             },
             receiver: {
-                value: 'default receiver'
+                value: 'Bob'
             }
 
         }));
@@ -35,13 +35,14 @@ var ChatRoom = React.createClass({
     componentWillMount: function() {
 
         const updateChat = this.props.updateChat;
+        const updateUsers = this.props.updateUsers;
 
         const socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
         stompClient = Stomp.over(socket);
-        stompClient.debug = null;
+        // stompClient.debug = null;
 
         stompClient.connect({}, function() {
-            stompClient.subscribe('/topic/greetings', function(message) {
+            stompClient.subscribe('/topic/greetings/500/Bob', function(message) {
 
                 let messageBody = JSON.parse(message.body);
                 let content = messageBody.content;
@@ -49,6 +50,10 @@ var ChatRoom = React.createClass({
 
                 updateChat(content, user);
             });
+            stompClient.subscribe('/topic/greetings/500/status', function(usersInRoom){
+                let users = JSON.parse(usersInRoom.body);
+                updateUsers(users);
+            })
         });
     },
 
@@ -61,7 +66,7 @@ var ChatRoom = React.createClass({
         }
 
         for (let i = 0; i < this.props.users.length; i++) {
-            usersInRoom[i] = <li key={i}>{this.props.users[i]}</li>;
+            usersInRoom[i] = <li key={i}>{this.props.users[i].userAlias}</li>;
         }
 
         return (

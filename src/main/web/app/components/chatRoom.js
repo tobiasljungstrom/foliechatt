@@ -29,14 +29,14 @@ var ChatRoom = React.createClass({
 
         socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
         stompClient = Stomp.over(socket);
+        stompClient.debug = null;
 
         var roomID = this.getValueFromInputWithId("room");
         var sender = this.getValueFromInputWithId("sender");
         var receiver = this.getValueFromInputWithId("receiver");
         var message = this.getValueFromInputWithId("message");
 
-        this.subscribeTo(roomID + "/status");
-        this.subscribeTo(roomID + "/" + sender);
+        this.subscribeTo(sender);
 
         setTimeout(
             function() {
@@ -48,20 +48,29 @@ var ChatRoom = React.createClass({
                         receiver: { value: receiver}
 
                     }));
-            }, 7000
+            }, 4000
         );
     },
 
-    subscribeTo: function(roomOrRoomSlashStatus) {
+    subscribeTo: function(sender) {
         console.log("subscribing! with stomp client ", stompClient);
+        var roomID = this.getValueFromInputWithId("room");
+
         stompClient.connect({}, function (frame) {
             // setConnected(true);
             console.log('-------Connected-------------: ' + frame);
-            var url = '/topic/greetings/' + roomOrRoomSlashStatus;
-            console.log("url is ", url);
-            stompClient.subscribe('/topic/greetings/' + roomOrRoomSlashStatus , function (greeting) {
+            var baseUrl = '/topic/greetings/' + roomID + "/";
+            var statusUrl = baseUrl + "status";
+            var myUrl = baseUrl + sender;
+            stompClient.subscribe(statusUrl , function (greeting) {
                 // showGreeting(JSON.parse(greeting.body).content);
-                console.log("Received greeting " + greeting)
+                console.log("---Received (status) greeting ---", greeting, "---------------");
+
+            });
+
+            stompClient.subscribe(myUrl , function (greeting) {
+                // showGreeting(JSON.parse(greeting.body).content);
+                console.log("---Received (my) greeting ---", greeting, "---------------");
             });
         });
     },

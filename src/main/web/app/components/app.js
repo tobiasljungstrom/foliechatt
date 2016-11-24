@@ -28,12 +28,10 @@ var App = React.createClass({
         });
     },
 
-    newUser: function(user) {
-        let updatedUsers = this.state.users;
-        updatedUsers.push(user);
+    updateUsers: function(users) {
 
         this.setState({
-            users: updatedUsers
+            users: users
         });
     },
 
@@ -42,7 +40,7 @@ var App = React.createClass({
             <div>
                 <NewUser/>
                 <LogIn/>
-                <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat} newUser={this.newUser}/>
+                <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat} updateUsers={this.updateUsers}/>
             </div>
         );
     }

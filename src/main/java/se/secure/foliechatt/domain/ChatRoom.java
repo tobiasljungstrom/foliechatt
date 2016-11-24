@@ -1,6 +1,8 @@
 package se.secure.foliechatt.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChatRoom {
@@ -38,6 +40,14 @@ public class ChatRoom {
             return false;
         }
 
+    }
+
+    public List<UserWrapper> getUsers(){
+        List<UserWrapper> users = new ArrayList<>();
+        for (Map.Entry<PublicKey, User> entry  : roomUsers.entrySet()) {
+            users.add(new UserWrapper(entry.getKey(), entry.getValue()));
+        }
+        return users;
     }
 
     public User addUser(PublicKey publicKey, User value) {

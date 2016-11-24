@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import se.secure.foliechatt.domain.ChatRoom;
 import se.secure.foliechatt.domain.PublicKey;
 import se.secure.foliechatt.domain.User;
+import se.secure.foliechatt.domain.UserWrapper;
 import se.secure.foliechatt.services.ChatRoomService;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public class ChatRoomController {
     ChatRoomService chatRoomService;
 
     @RequestMapping(value = "/{roomId}", method = RequestMethod.POST)
-    public Map<PublicKey, User> joinChatRoom(@PathVariable Long roomId, @RequestBody User user) {
+    public List<UserWrapper> joinChatRoom(@PathVariable Long roomId, @RequestBody User user) {
 
-        Map<PublicKey,User> users =  chatRoomService.addUserToRoom(user, roomId);
+        List<UserWrapper> users =  chatRoomService.addUserToRoom(user, roomId);
 
         return users;
     }

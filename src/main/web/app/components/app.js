@@ -24,7 +24,7 @@ var App = React.createClass({
         updatedMessages.push({message: message, user: user});
 
         this.setState({
-            massages: updatedMessages
+            messages: updatedMessages
         });
     },
 

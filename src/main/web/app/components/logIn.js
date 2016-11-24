@@ -3,7 +3,31 @@ var React = require('react');
 var LogIn = React.createClass({
 
     logIn: function() {
-        //console.log("Log in clicked");
+        const logInForm = document.getElementById('logInForm');
+
+        //Collect the form data
+        const email = logInForm.elements['emailInput'].value;
+        const password = logInForm.elements['passwordInput'].value;
+
+        //Create the data object that will be sent to the backend
+        const data = JSON.stringify({
+            email: email,
+            password: password
+        });
+
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //Callback triggers on success
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('LOG IN IS GOOD');
+            } else if(this.readyState == 4 && this.status == 401) {
+                console.log('UNATHORIZED');
+            }
+
+        };
+        request.open('POST', 'http://localhost:9876/foliechatt/api/v.1/login', true);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(data);
     },
 
     render: function() {

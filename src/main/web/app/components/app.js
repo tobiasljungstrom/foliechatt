@@ -1,26 +1,39 @@
 var React = require('react');
 
 var NewUser = require('./newUser');
-var ChatRoom = require('./chatRoom');
 var LogIn = require('./logIn');
-require('../messaging/messagehandler');
+var ChatRoom = require('./chat/chatRoom');
 
 var App = React.createClass({
-    users: [
-        'Pelle', 'Kalle'
-    ],
-    messages: [
-        {
-            user: 'Pelle',
-            message: 'YOYO där'
-        }
-    ],
+
+    getInitialState: function() {
+        return {
+            users: ['John'],
+            messages: [
+                {
+                    user: 'John',
+                    message: 'Hello'
+                }
+            ]
+        };
+    },
+
+    updateChat: function(message, user) {
+        console.log('Updating chat...');
+        let updatedMessages = this.state.messages;
+        updatedMessages.push({message: message, user: user});
+
+        this.setState({
+            massages: updatedMessages
+        });
+    },
+
     render: function() {
         return (
             <div>
                 <NewUser/>
                 <LogIn/>
-                <ChatRoom messages={this.messages} users={this.users}/>
+                <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat}/>
             </div>
         );
     }

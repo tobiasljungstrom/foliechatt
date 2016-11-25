@@ -1,5 +1,7 @@
 package se.secure.foliechatt.encryption;
 
+import se.secure.foliechatt.domain.PasswordWrapper;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
@@ -9,12 +11,8 @@ import java.security.spec.InvalidKeySpecException;
 
 public class PasswordHasher {
 
-    private int iterations;
-    private String salt;
-    private String hash;
-
-    public void generatePasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        iterations = 1000;
+    public PasswordWrapper generatePasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        int iterations = 1000;
         char[] chars = password.toCharArray();
         byte[] saltBytes = doSalt();
 
@@ -22,8 +20,10 @@ public class PasswordHasher {
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] hashBytes = skf.generateSecret(spec).getEncoded();
 
-        salt = toHex(saltBytes);
-        hash = toHex(hashBytes);
+        String salt = toHex(saltBytes);
+        String hash = toHex(hashBytes);
+
+        return new PasswordWrapper(hash, salt, iterations);
 
     }
 
@@ -46,17 +46,5 @@ public class PasswordHasher {
         }else{
             return hex;
         }
-    }
-
-    public int getIterations() {
-        return iterations;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public String getSalt(){
-        return salt;
     }
 }

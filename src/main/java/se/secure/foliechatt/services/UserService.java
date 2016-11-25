@@ -1,21 +1,15 @@
 package se.secure.foliechatt.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import se.secure.foliechatt.domain.LoginAttemptDTO;
+import se.secure.foliechatt.domain.PasswordWrapper;
 import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.encryption.PasswordHasher;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
@@ -30,12 +24,11 @@ public class UserService {
 
 
     public User saveUser(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        // TODO hash/salt handling
+
         PasswordHasher passwordHasher = new PasswordHasher();
-        passwordHasher.generatePasswordHash(user.getPassword());
-        user.setPassword(passwordHasher.getHash());
-        user.setSalt(passwordHasher.getSalt());
-        user.setIterations(passwordHasher.getIterations());
+        PasswordWrapper password = passwordHasher.generatePasswordHash(user.getPassword());
+
+        user.setFullPassword(password);
 
         return repo.save(user);
     }

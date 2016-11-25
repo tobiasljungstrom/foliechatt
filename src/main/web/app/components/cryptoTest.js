@@ -33,6 +33,8 @@ var CryptoTest = React.createClass({
             console.log("generating key: ", u1_privKey, u1_pubKey);
         });
 
+
+
     },
 
     getPubPrivKey: function(user) {
@@ -80,23 +82,28 @@ var CryptoTest = React.createClass({
             console.log(message, thingToLog);
         });
     },
-    decrypt: function() {
+    decrypt: function(message) {
         options = {
-            message: openpgp.message.readArmored(encrypted),     // parse armored message
-            publicKeys: openpgp.key.readArmored(pubkey).keys,    // for verification (optional)
-            privateKey: openpgp.key.readArmored(privkey).keys[0] // for decryption
+            message: openpgp.message.readArmored(message),     // parse armored message
+            publicKeys: openpgp.key.readArmored(u1_pubKey).keys,    // for verification (optional)
+            privateKey: openpgp.key.readArmored(u1_privKey).keys[0] // for decryption
         };
 
         openpgp.decrypt(options).then(function(plaintext) {
-            return plaintext.data; // 'Hello, World!'
+            console.log("inside decrypt callback. plaintext is: ", plaintext);
+            //return plaintext.data; // 'Hello, World!'
         });
     },
 
     sendMessage: function() {
         let message = document.getElementById("sendMe").value;
+        let decryptFunc = this.decrypt;
 
         this.encrypt(message, function(encryptedText) {
-            console.log("encrypted message is ",encryptedText);
+
+            console.log("encrypted message is ",encryptedText.data);
+            decryptFunc(encryptedText.data);
+
         });
 
 

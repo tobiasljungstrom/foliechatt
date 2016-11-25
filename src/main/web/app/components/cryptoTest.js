@@ -8,6 +8,8 @@ var u1_pubKey = null;
 var u2_privKey = null;
 var u2_pubKey = null;
 
+var publicKeyArray = [u1_privKey, u2_pubKey];
+
 
 var CryptoTest = React.createClass({
 
@@ -30,7 +32,19 @@ var CryptoTest = React.createClass({
         openpgp.generateKey(options).then(function(key) {
             u1_privKey = key.privateKeyArmored;
             u1_pubKey = key.publicKeyArmored;
-            console.log("generating key: ", u1_privKey, u1_pubKey);
+            console.log("generating key for user 1: ", u1_privKey, u1_pubKey);
+        });
+
+        /*var options2 = {
+            userIds: [ user_2 ], // multiple user IDs
+            numBits: 2048   // default was 4096        // RSA key size
+            // passphrase: 'super long and hard to guess secret'         // protects the private key
+        };*/
+
+        openpgp.generateKey(options).then(function(key) {
+            u2_privKey = key.privateKeyArmored;
+            u2_pubKey = key.publicKeyArmored;
+            console.log("generating key for user 2: ", u2_privKey, u2_pubKey);
         });
 
 
@@ -63,8 +77,8 @@ var CryptoTest = React.createClass({
 
         options = {
             data: message,                             // input as String (or Uint8Array)
-            publicKeys: openpgp.key.readArmored(u1_pubKey).keys,  // for encryption
-            privateKeys: openpgp.key.readArmored(u1_privKey).keys, // for signing (optional)
+            publicKeys: openpgp.key.readArmored(u2_pubKey).keys,  // for encryption
+            privateKeys: openpgp.key.readArmored(u1_privKey).keys // for signing (optional)
         };
 
         openpgp.encrypt(options).then( function(cipherText) {
@@ -83,14 +97,27 @@ var CryptoTest = React.createClass({
         });
     },
     decrypt: function(message) {
-        options = {
+    /*    let options = {
             message: openpgp.message.readArmored(message),     // parse armored message
-            publicKeys: openpgp.key.readArmored(u1_pubKey).keys,    // for verification (optional)
+            publicKeys: openpgp.key.readArmored([u1_pubKey, u2_pubKey]).keys,    // for verification (optional)
             privateKey: openpgp.key.readArmored(u1_privKey).keys[0] // for decryption
         };
 
         openpgp.decrypt(options).then(function(plaintext) {
             console.log("inside decrypt callback. plaintext is: ", plaintext);
+            //return plaintext.data; // 'Hello, World!'
+        });
+*/
+
+
+        let options2 = {
+            message: openpgp.message.readArmored(message),     // parse armored message
+            publicKeys: openpgp.key.readArmored(u1_pubKey).keys,    // for verification (optional)
+            privateKey: openpgp.key.readArmored(u2_privKey).keys[0] // for decryption
+        };
+
+        openpgp.decrypt(options2).then(function(plaintext) {
+            console.log("inside decrypt 2 callback. plaintext is: ", plaintext);
             //return plaintext.data; // 'Hello, World!'
         });
     },

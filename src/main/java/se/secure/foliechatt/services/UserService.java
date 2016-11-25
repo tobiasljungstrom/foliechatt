@@ -6,10 +6,17 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import se.secure.foliechatt.domain.LoginAttemptDTO;
 import se.secure.foliechatt.domain.User;
+import se.secure.foliechatt.encryption.PasswordHasher;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 
@@ -21,10 +28,18 @@ public class UserService {
     @Autowired
     EntityManager em;
 
-    public User saveUser(User user) {
+
+    public User saveUser(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
         // TODO hash/salt handling
+        PasswordHasher passwordHasher = new PasswordHasher();
+        passwordHasher.generatePasswordHash(user.getPassword());
+        user.setPassword(passwordHasher.getHash());
+        user.setSalt(passwordHasher.getSalt());
+        user.setIterations(passwordHasher.getIterations());
+
         return repo.save(user);
     }
+
 
 
     public List<User> getAll() {

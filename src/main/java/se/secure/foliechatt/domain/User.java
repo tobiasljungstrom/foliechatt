@@ -13,6 +13,9 @@ public class User {
     private Long id;
     private String alias;
     private String email;
+    private String password;
+    private String salt;
+    private Integer iterations;
 
     public User() {
     }
@@ -38,8 +41,6 @@ public class User {
         this.password = password;
     }
 
-    private String password;
-
     public String getAlias() {
         return alias;
     }
@@ -51,7 +52,24 @@ public class User {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public Integer getIterations() {
+        return iterations;
+    }
+
+    public void setIterations(Integer iterations) {
+        this.iterations = iterations;
     }
 }

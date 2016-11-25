@@ -3,6 +3,7 @@ var React = require('react');
 var NewUser = require('./newUser');
 var LogIn = require('./logIn');
 var ChatRoom = require('./chat/chatRoom');
+var CryptoTest = require('./cryptoTest');
 
 var App = React.createClass({
 
@@ -53,6 +54,7 @@ var App = React.createClass({
                 <NewUser/>
                 <LogIn/>
                 <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat} updateUsers={this.updateUsers}/>
+                <CryptoTest/>
             </div>
         );
     }

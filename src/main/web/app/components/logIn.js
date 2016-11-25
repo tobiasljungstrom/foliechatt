@@ -1,8 +1,14 @@
 var React = require('react');
 
 var LogIn = React.createClass({
+    propTypes : {
+        loggedInUser: React.PropTypes.object,
+        setLoggedInUser: React.PropTypes.func.isRequired
+    },
 
     logIn: function() {
+        const setLoggedInUser = this.props.setLoggedInUser;
+
         const logInForm = document.getElementById('logInForm');
 
         //Collect the form data
@@ -19,7 +25,9 @@ var LogIn = React.createClass({
         request.onreadystatechange = function() {
             //Callback triggers on success
             if (this.readyState == 4 && this.status == 200) {
-                console.log('LOG IN IS GOOD');
+                setLoggedInUser(JSON.parse(request.responseText));
+                console.log(request.responseText);
+                //console.log('LOG IN IS GOOD');
             } else if(this.readyState == 4 && this.status == 401) {
                 console.log('UNATHORIZED');
             }
@@ -34,6 +42,7 @@ var LogIn = React.createClass({
         return (
             <form id="logInForm" className="form">
                 <div className="formTitle">Log In</div>
+                <p>{this.props.loggedInUser.alias}</p>
                 <table>
                     <tbody>
                         <tr>

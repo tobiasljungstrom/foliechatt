@@ -1,6 +1,8 @@
 package se.secure.foliechatt.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +15,10 @@ public class User {
     private Long id;
     private String alias;
     private String email;
+
+    @JsonIgnore
+    private String password;
+
 
     public User() {
     }
@@ -37,8 +43,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    private String password;
 
     public String getAlias() {
         return alias;

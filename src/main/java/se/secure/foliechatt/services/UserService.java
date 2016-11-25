@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import se.secure.foliechatt.domain.LoginAttemptDTO;
 import se.secure.foliechatt.domain.User;
+import se.secure.foliechatt.exceptions.InvalidLoginException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -37,6 +38,23 @@ public class UserService {
             repo.delete(id);
         }
         return userExists;
+    }
+
+    public User authenticateUser(LoginAttemptDTO loginAttempt) throws InvalidLoginException {
+        TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
+        query.setParameter("email", loginAttempt.getEmail());
+        User result = query.getSingleResult();
+
+        if(result == null){
+            throw new InvalidLoginException("User not found");
+        }
+
+        if(result.getPassword().equals(loginAttempt.getPassword())){
+            return result;
+        }
+
+        throw new InvalidLoginException("Wrong password");
+
     }
 
     public boolean isAuthorizedForLogin(LoginAttemptDTO loginAttempt) {

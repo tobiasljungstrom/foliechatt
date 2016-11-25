@@ -2,10 +2,11 @@ package se.secure.foliechatt.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.secure.foliechatt.domain.LoginAttemptDTO;
+import se.secure.foliechatt.domain.LoginAttempt;
 import se.secure.foliechatt.domain.PasswordWrapper;
 import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.encryption.PasswordHasher;
+import se.secure.foliechatt.exceptions.InvalidLoginException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -33,8 +34,6 @@ public class UserService {
         return repo.save(user);
     }
 
-
-
     public List<User> getAll() {
         return repo.findAll();
     }
@@ -47,7 +46,25 @@ public class UserService {
         return userExists;
     }
 
-    public boolean isAuthorizedForLogin(LoginAttemptDTO loginAttempt) {
+    public User authenticateUser(LoginAttempt loginAttempt) throws InvalidLoginException {
+        TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
+        query.setParameter("email", loginAttempt.getEmail());
+        User result = query.getSingleResult();
+
+        if(result == null){
+            throw new InvalidLoginException("User not found");
+        }
+
+        //TODO: Use hash validation instead
+        if(result.getPassword().equals(loginAttempt.getPassword())){
+            return result;
+        }
+
+        throw new InvalidLoginException("Wrong password");
+
+    }
+
+    public boolean isAuthorizedForLogin(LoginAttempt loginAttempt) {
         TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", loginAttempt.getEmail());
         List<User> result = query.getResultList();

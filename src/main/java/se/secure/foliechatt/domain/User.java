@@ -1,6 +1,5 @@
 package se.secure.foliechatt.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -38,10 +37,6 @@ public class User {
         this.iterations = passwordWrapper.getIterations();
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -52,6 +47,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getAlias() {

@@ -3,6 +3,8 @@ var openpgp = require('openpgp');
 var user_1 = {userName: "erik"};
 var user_2 = {userName: "perra"};
 
+var CryptoHelper = require("./cryptoHelper.js");
+var CH = new CryptoHelper();
 var u1_privKey = null;
 var u1_pubKey = null;
 var u2_privKey = null;
@@ -12,6 +14,7 @@ var CryptoTest = React.createClass({
 
     componentWillMount: function() {
         this.generateTestKeys();
+        CH.publicKeyPromise().then( (pk) => console.log("I got the pk promise!", pk))
     },
     generateTestKeys: function() {
         var options = {
@@ -70,15 +73,11 @@ var CryptoTest = React.createClass({
     testEncryptAndDecryptMessage: function() {
         let message = document.getElementById("sendMe").value;
 
-        this.encrypt(message, u1_privKey, u2_pubKey)
-            .then(this.logWithMessage("Encrypted message (object) is: "))
-            .then( message => message.data )  // transform, because the next method needs just the data
-            .then(this.logWithMessage("Just the encrypted data: "))
-            // Later, do sending logic here..  then receive and decrypt in another function
-            .then(this.decryptWithKeys(u1_pubKey, u2_privKey)) // return a new one arg function that only takes last parameter of .decrypt()
-            .then(this.logWithMessage("Decrypted message (object) is: "))
-            .then(message => message.data)
-            .then(this.logWithMessage("Just the decrypted data: "));
+        CH.encrypt(message, CH.publicKey)
+            .then( message => message.data)
+            .then( CH.decryptWithSenderKey(CH.publicKey) )
+            .then( message => message.data )
+            .then( msg => console.log("decrypted data from CH: ", msg));
 
     },
 

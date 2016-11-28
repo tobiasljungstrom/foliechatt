@@ -1,11 +1,13 @@
 package se.secure.foliechatt.domain;
 
-public class UserWrapper {
+import se.secure.foliechatt.encryption.PublicKey;
+
+public class Chatter {
 
     private String userAlias;
     private String publicKey;
 
-    public UserWrapper(PublicKey key, User user) {
+    public Chatter(PublicKey key, User user) {
         this.userAlias = user.getAlias();
         this.publicKey = key.getValue();
     }

@@ -1,17 +1,7 @@
 package se.secure.foliechatt.domain;
 
-import javax.persistence.Entity;
-
-public class LoginAttemptDTO {
-    private String alias, email, password;
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
+public class LoginAttempt {
+    private String  email, password;
 
     public String getEmail() {
         return email;

@@ -1,5 +1,7 @@
 package se.secure.foliechatt.domain;
 
+import se.secure.foliechatt.encryption.PublicKey;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +24,8 @@ public class ChatRoom {
     }
 
     public boolean addUserIfNotPresent(PublicKey publicKey) {
-        //boolean doesNotExists = !roomUsers.containsKey(publicKey);
 
         Boolean u = roomUsers.containsKey(publicKey.getValue());
-
-        // roomUsers.containsKey(publicKey);
 
         boolean doesNotExists =  roomUsers.keySet().stream()
                 .filter(k -> k.getValue().equals(publicKey.getValue()))
@@ -42,10 +41,10 @@ public class ChatRoom {
 
     }
 
-    public List<UserWrapper> getUsers(){
-        List<UserWrapper> users = new ArrayList<>();
+    public List<Chatter> getUsers(){
+        List<Chatter> users = new ArrayList<>();
         for (Map.Entry<PublicKey, User> entry  : roomUsers.entrySet()) {
-            users.add(new UserWrapper(entry.getKey(), entry.getValue()));
+            users.add(new Chatter(entry.getKey(), entry.getValue()));
         }
         return users;
     }

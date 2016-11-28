@@ -1,21 +1,19 @@
-package se.secure.foliechatt.domain;
+package se.secure.foliechatt.resources.ws;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import se.secure.foliechatt.domain.ChatRoom;
+import se.secure.foliechatt.chat.ChatRoomManager;
+import se.secure.foliechatt.domain.Message;
 import se.secure.foliechatt.services.ChatRoomService;
 
 import java.util.Optional;
 
 @Controller
 public class MessageRouter {
-
-    //@MessageMapping("/hello/{chatroomID}/{receiverPublicKey}")
-    // @SendTo("/topic/greetings/{chatroomID}/{receiverPublicKey}")
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -24,8 +22,6 @@ public class MessageRouter {
     private ChatRoomService chatRoomService;
 
     private ChatRoomManager chatRoomManager;
-
-
 
     @MessageMapping("/hello/{roomID}")
     public void greeting(@DestinationVariable Long roomID, Message message) throws Exception {
@@ -36,26 +32,15 @@ public class MessageRouter {
         message.setContent(message.getContent());
 
         Optional<ChatRoom> maybeChatRoom = chatRoomManager.getChatRoomById(roomID);
-        ChatRoom chatRoom = maybeChatRoom.orElseThrow( () -> new RuntimeException("Tried to send message chat room that doesn't exist"));
+        ChatRoom chatRoom = maybeChatRoom.orElseThrow(() -> new RuntimeException("Tried to send message chat room that doesn't exist"));
         boolean wasAdded = chatRoom.addUserIfNotPresent(message.getSender());
 
-        if(wasAdded) {
+        if (wasAdded) {
             System.out.println("returning updated list of users to /status");
-            simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/status", chatRoom.getUsers() );
+            simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/status", chatRoom.getUsers());
         }
 
         System.out.println("forwarding message to " + message.getReceiver().getValue());
         simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/" + message.getReceiver().getValue(), message);
-        // return message;
     }
-
-
-
-
-
-
-
-
-
-
 }

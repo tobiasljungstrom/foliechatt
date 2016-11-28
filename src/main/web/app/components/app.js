@@ -9,7 +9,8 @@ var App = React.createClass({
 
     getInitialState: function() {
         return {
-            users: [{userAlias: 'Bob', publicKey: "abc"}],
+            loggedInUser: {alias: "Not logged in"},
+            users: [{userAlias: 'Bob', publicKey: 'abc'}],
             messages: [
                 {
                     user: 'Bob',
@@ -18,22 +19,25 @@ var App = React.createClass({
             ]
         };
     },
+    setLoggedInUser: function(user) {
+        this.setState({loggedInUser:user});
+    },
 
     updateChat: function(message, key) {
         let updatedMessages = this.state.messages;
         let users = this.state.users;
 
-        let userAlias = "default name";
+        let userAlias = 'default name';
         for(let i = 0; i < users.length; i++) {
             let user = users[i];
-            console.log("user in loop", user);
+            console.log('user in loop', user);
             if(user.publicKey === key) {
-                console.log("loop true");
+                console.log('loop true');
                 userAlias = users[i].userAlias;
                 break;
             }
         }
-        console.log("user alias", userAlias);
+        console.log('user alias', userAlias);
         updatedMessages.push({message: message, user: userAlias});
 
         this.setState({
@@ -52,7 +56,7 @@ var App = React.createClass({
         return (
             <div>
                 <NewUser/>
-                <LogIn/>
+                <LogIn setLoggedInUser={this.setLoggedInUser} loggedInUser={this.state.loggedInUser} />
                 <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat} updateUsers={this.updateUsers}/>
                 <CryptoTest/>
             </div>

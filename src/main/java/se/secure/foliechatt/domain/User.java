@@ -1,5 +1,7 @@
 package se.secure.foliechatt.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
@@ -13,6 +15,12 @@ public class User {
     private Long id;
     private String alias;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    @JsonIgnore
+    private String salt;
+    @JsonIgnore
+    private Integer iterations;
 
     public User() {
     }
@@ -20,6 +28,13 @@ public class User {
     public User(String alias) {
         this.alias = alias;
 
+    }
+
+    @JsonIgnore
+    public void setFullPassword(Password password) {
+        this.password = password.getPassword();
+        this.salt = password.getSalt();
+        this.iterations = password.getIterations();
     }
 
     public String getEmail() {
@@ -38,8 +53,6 @@ public class User {
         this.password = password;
     }
 
-    private String password;
-
     public String getAlias() {
         return alias;
     }
@@ -51,7 +64,16 @@ public class User {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public Integer getIterations() {
+        return iterations;
     }
 }

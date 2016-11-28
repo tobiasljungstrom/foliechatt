@@ -1,4 +1,4 @@
-package se.secure.foliechatt.resources;
+package se.secure.foliechatt.resources.restful;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.services.UserService;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @RestController
@@ -28,7 +31,7 @@ public class UserController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) throws InvalidKeySpecException, NoSuchAlgorithmException {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 

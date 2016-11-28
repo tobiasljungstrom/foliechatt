@@ -42,6 +42,7 @@ var LogIn = React.createClass({
         return (
             <form id="logInForm" className="form">
                 <div className="formTitle">Log In</div>
+                <p>{this.props.loggedInUser.alias}</p>
                 <table>
                     <tbody>
                         <tr>

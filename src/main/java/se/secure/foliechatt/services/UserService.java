@@ -3,31 +3,31 @@ package se.secure.foliechatt.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.secure.foliechatt.domain.LoginAttempt;
-import se.secure.foliechatt.domain.PasswordWrapper;
+import se.secure.foliechatt.domain.Password;
 import se.secure.foliechatt.domain.User;
-import se.secure.foliechatt.encryption.PasswordHasher;
+import se.secure.foliechatt.encryption.Hasher;
 import se.secure.foliechatt.exceptions.InvalidLoginException;
+import se.secure.foliechatt.persistence.UserRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
-
 
 @Service
 public class UserService {
 
     @Autowired
     UserRepository repo;
-    @Autowired
+    @PersistenceContext
     EntityManager em;
-
 
     public User saveUser(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-        PasswordHasher passwordHasher = new PasswordHasher();
-        PasswordWrapper password = passwordHasher.generatePasswordHash(user.getPassword());
+        Hasher hasher = new Hasher();
+        Password password = hasher.GenerateHash(user.getPassword());
 
         user.setFullPassword(password);
 

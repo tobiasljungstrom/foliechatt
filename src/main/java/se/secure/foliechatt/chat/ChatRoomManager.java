@@ -1,4 +1,8 @@
-package se.secure.foliechatt.domain;
+package se.secure.foliechatt.chat;
+
+import se.secure.foliechatt.domain.ChatRoom;
+import se.secure.foliechatt.domain.User;
+import se.secure.foliechatt.encryption.PublicKey;
 
 import java.util.ArrayList;
 import java.util.List;

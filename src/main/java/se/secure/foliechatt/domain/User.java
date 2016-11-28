@@ -31,10 +31,10 @@ public class User {
     }
 
     @JsonIgnore
-    public void setFullPassword(PasswordWrapper passwordWrapper) {
-        this.password = passwordWrapper.getPassword();
-        this.salt = passwordWrapper.getSalt();
-        this.iterations = passwordWrapper.getIterations();
+    public void setFullPassword(Password password) {
+        this.password = password.getPassword();
+        this.salt = password.getSalt();
+        this.iterations = password.getIterations();
     }
 
     public String getEmail() {

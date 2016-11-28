@@ -1,11 +1,11 @@
 package se.secure.foliechatt.domain;
 
-public class PasswordWrapper {
+public class Password {
     private String password;
     private String salt;
     private int iterations;
 
-    public PasswordWrapper(String password, String salt, int iterations) {
+    public Password(String password, String salt, int iterations) {
         this.password = password;
         this.salt = salt;
         this.iterations = iterations;

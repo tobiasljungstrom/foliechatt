@@ -1,6 +1,6 @@
 package se.secure.foliechatt.encryption;
 
-import se.secure.foliechatt.domain.PasswordWrapper;
+import se.secure.foliechatt.domain.Password;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -9,9 +9,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
-public class PasswordHasher {
+public class Hasher {
 
-    public PasswordWrapper generatePasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public Password GenerateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
         byte[] saltBytes = doSalt();
@@ -23,16 +23,16 @@ public class PasswordHasher {
         String salt = toHex(saltBytes);
         String hash = toHex(hashBytes);
 
-        return new PasswordWrapper(hash, salt, iterations);
+        return new Password(hash, salt, iterations);
 
     }
 
-    private boolean validatePassword(String incomingPassword, PasswordWrapper storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        int iterations = storedPassword.getIterations();
-        byte[] salt = fromHex(storedPassword.getSalt());
-        byte[] hash = fromHex(storedPassword.getPassword());
+    private boolean validateHash(String incomingHash, Password storedHash) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        int iterations = storedHash.getIterations();
+        byte[] salt = fromHex(storedHash.getSalt());
+        byte[] hash = fromHex(storedHash.getPassword());
 
-        PBEKeySpec spec = new PBEKeySpec(incomingPassword.toCharArray(), salt, iterations, hash.length * 8);
+        PBEKeySpec spec = new PBEKeySpec(incomingHash.toCharArray(), salt, iterations, hash.length * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] testHash = skf.generateSecret(spec).getEncoded();
 

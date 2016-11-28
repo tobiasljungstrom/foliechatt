@@ -1,4 +1,4 @@
-package se.secure.foliechatt.domain;
+package se.secure.foliechatt.encryption;
 
 public class PublicKey {
 

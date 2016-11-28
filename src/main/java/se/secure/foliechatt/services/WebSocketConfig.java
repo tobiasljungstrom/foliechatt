@@ -1,4 +1,4 @@
-package se.secure.foliechatt.domain;
+package se.secure.foliechatt.services;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -22,7 +22,4 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         System.out.println("registering stomp endpoint");
         registry.addEndpoint("/folieSocket").setAllowedOrigins("*").withSockJS();
     }
-
-
-
 }

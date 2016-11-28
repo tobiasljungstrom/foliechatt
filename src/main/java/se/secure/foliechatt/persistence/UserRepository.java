@@ -1,4 +1,4 @@
-package se.secure.foliechatt.services;
+package se.secure.foliechatt.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import se.secure.foliechatt.domain.LoginAttempt;

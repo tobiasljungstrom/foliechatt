@@ -1,4 +1,4 @@
-package se.secure.foliechatt.resources;
+package se.secure.foliechatt.resources.restful;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

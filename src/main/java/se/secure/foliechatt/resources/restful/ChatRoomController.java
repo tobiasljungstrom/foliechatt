@@ -24,7 +24,8 @@ public class ChatRoomController {
     UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createChatRoom(@RequestBody String sessionToken) {
+    public ResponseEntity createChatRoom(@RequestHeader(name = "sessionToken", required = true) String sessionToken ,@RequestBody String publicKey) {
+
         Optional<User> maybeUser = userService.getUserBySessionToken(sessionToken);
 
         if(! maybeUser.isPresent()) {
@@ -34,7 +35,7 @@ public class ChatRoomController {
         User user = maybeUser.get();
 
         // TODO GET PUBLIC KEY FROM FRONEND!
-        ChatRoom chatRoom = new ChatRoom(user, new PublicKey("soup"));
+        ChatRoom chatRoom = new ChatRoom(user, new PublicKey(publicKey));
 
         //TODO REMOVE
         for (int i = 0; i < chatRoom.getUsers().size(); i++ ){

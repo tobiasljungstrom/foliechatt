@@ -9,6 +9,8 @@ import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.services.UserService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "/api/v.1/login")
 public class LoginController {
@@ -27,6 +29,9 @@ public class LoginController {
             return ResponseEntity.status(401).body("Wrong username/password");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        String sessionToken = userService.getUniqueSessionToken(user);
+        userService.addUserAsLoggedIn(user, sessionToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(sessionToken);
     }
 }

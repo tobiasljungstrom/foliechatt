@@ -11,7 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 
 public class Hasher {
 
-    public Password GenerateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static Password GenerateHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
         byte[] saltBytes = doSalt();
@@ -27,10 +27,10 @@ public class Hasher {
 
     }
 
-    private boolean validateHash(String incomingHash, Password storedHash) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static boolean validateHash(String incomingHash, Password storedHash) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = storedHash.getIterations();
         byte[] salt = fromHex(storedHash.getSalt());
-        byte[] hash = fromHex(storedHash.getPassword());
+        byte[] hash = fromHex(storedHash.getHash());
 
         PBEKeySpec spec = new PBEKeySpec(incomingHash.toCharArray(), salt, iterations, hash.length * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -43,14 +43,14 @@ public class Hasher {
         return diff == 0;
     }
 
-    private byte[] doSalt() throws NoSuchAlgorithmException {
+    private static byte[] doSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[32];
         sr.nextBytes(salt);
         return salt;
     }
 
-    private String toHex(byte[] array) throws NoSuchAlgorithmException {
+    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
@@ -61,7 +61,7 @@ public class Hasher {
         }
     }
 
-    private byte[] fromHex(String hex) throws NoSuchAlgorithmException {
+    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
         byte[] bytes = new byte[hex.length() / 2];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);

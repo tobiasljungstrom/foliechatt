@@ -1,18 +1,18 @@
 package se.secure.foliechatt.domain;
 
 public class Password {
-    private String password;
+    private String hash;
     private String salt;
     private int iterations;
 
-    public Password(String password, String salt, int iterations) {
-        this.password = password;
+    public Password(String hash, String salt, int iterations) {
+        this.hash = hash;
         this.salt = salt;
         this.iterations = iterations;
     }
 
-    public String getPassword() {
-        return password;
+    public String getHash() {
+        return hash;
     }
 
     public String getSalt() {
@@ -23,8 +23,8 @@ public class Password {
         return iterations;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public void setSalt(String salt) {

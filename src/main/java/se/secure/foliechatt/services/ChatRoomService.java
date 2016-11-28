@@ -12,6 +12,8 @@ import java.util.*;
 @Service
 public class ChatRoomService {
 
+    private static final int CHATROOM_ID_LENGTH = 10;
+
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
 
@@ -41,4 +43,6 @@ public class ChatRoomService {
     public void setChatRoomManager(ChatRoomManager chatRoomManager) {
         this.chatRoomManager = chatRoomManager;
     }
+
+
 }

@@ -32,7 +32,7 @@ public class User {
 
     @JsonIgnore
     public void setFullPassword(Password password) {
-        this.password = password.getPassword();
+        this.password = password.getHash();
         this.salt = password.getSalt();
         this.iterations = password.getIterations();
     }
@@ -75,5 +75,17 @@ public class User {
 
     public Integer getIterations() {
         return iterations;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", alias='" + alias + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
+                ", iterations=" + iterations +
+                '}';
     }
 }

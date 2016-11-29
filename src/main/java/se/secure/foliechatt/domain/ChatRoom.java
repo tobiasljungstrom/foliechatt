@@ -1,5 +1,6 @@
 package se.secure.foliechatt.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.secure.foliechatt.encryption.PublicKey;
 
 import java.util.*;

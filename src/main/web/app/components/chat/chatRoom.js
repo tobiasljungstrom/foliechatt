@@ -9,8 +9,9 @@ var ChatRoom = React.createClass({
     propTypes: {
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
-        updateChat: React.PropTypes.func,
-        newUser: React.PropTypes.func
+        updateChat: React.PropTypes.func.isRequired,
+        cryptoHelper: React.PropTypes.object.isRequired,
+        roomId: React.PropTypes.string.isRequired
     },
 
     sendMessage: function() {
@@ -30,13 +31,8 @@ var ChatRoom = React.createClass({
         } )
     },
 
-    handleNewUser: function() {
-        let user = 'Bubba';
-        this.props.newUser(user);
-    },
-
     componentWillMount: function() {
-
+        const publicKey = this.props.cryptoHelper.publicKey;
         const updateChat = this.props.updateChat;
         const updateUsers = this.props.updateUsers;
 
@@ -45,7 +41,7 @@ var ChatRoom = React.createClass({
         // stompClient.debug = null;
 
         stompClient.connect({}, function() {
-            stompClient.subscribe('/topic/greetings/500/abc', function(message) {
+            stompClient.subscribe(`/topic/greetings/${this.props.roomId}/${publicKey}`, function(message) {
 
                 let messageBody = JSON.parse(message.body);
                 let content = messageBody.content;
@@ -53,9 +49,9 @@ var ChatRoom = React.createClass({
 
                 updateChat(content, user);
             });
-            stompClient.subscribe('/topic/greetings/500/status', function(usersInRoom){
+            stompClient.subscribe(`/topic/greetings/${this.props.roomId}/status`, function(usersInRoom){
                 let users = JSON.parse(usersInRoom.body);
-                updateUsers(users);
+                updateUsers(users, this.props.roomId);
             })
         });
     },
@@ -85,7 +81,6 @@ var ChatRoom = React.createClass({
                 </ul>
                 <input type="text" id="messageInput"/>
                 <button onClick={this.sendMessage}>Send!</button>
-                <button onClick={this.handleNewUser}>New User</button>
             </div>
         );
 

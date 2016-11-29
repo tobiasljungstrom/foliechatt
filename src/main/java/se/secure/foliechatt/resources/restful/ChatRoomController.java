@@ -44,7 +44,7 @@ public class ChatRoomController {
         }
 
 
-        return ResponseEntity.ok(chatRoom.getUsers());
+        return ResponseEntity.ok(chatRoom);
     }
 
 

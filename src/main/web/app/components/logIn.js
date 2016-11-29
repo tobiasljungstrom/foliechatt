@@ -7,7 +7,7 @@ var LogIn = React.createClass({
     },
 
     logIn: function() {
-        const setSessionToken = this.props.setsessionToken;
+        const setSessionToken = this.props.setSessionToken;
 
         const logInForm = document.getElementById('logInForm');
 

@@ -9,7 +9,7 @@ var App = React.createClass({
 
     getInitialState: function() {
         return {
-            loggedInUser: {alias: "Not logged in"},
+            sessionKey: null,
             users: [{userAlias: 'Bob', publicKey: 'abc'}],
             messages: [
                 {
@@ -19,8 +19,8 @@ var App = React.createClass({
             ]
         };
     },
-    setLoggedInUser: function(user) {
-        this.setState({loggedInUser:user});
+    setSessionKey: function(sessionKey) {
+        this.setState({sessionKey:sessionKey});
     },
 
     updateChat: function(message, key) {
@@ -53,10 +53,18 @@ var App = React.createClass({
     },
 
     render: function() {
-        return (
+
+        let loginOrLoginStatus = null;
+        if(this.state.sessionKey) {
+            loginOrLoginStatus = <p>You are logged in</p>;
+        } else {
+            loginOrLoginStatus = <LogIn setSessionKey={this.setSessionKey} sessionKey={this.state.sessionKey}/>;
+        }
+
+            return (
             <div>
                 <NewUser/>
-                <LogIn setLoggedInUser={this.setLoggedInUser} loggedInUser={this.state.loggedInUser} />
+                { loginOrLoginStatus }
                 <ChatRoom messages={this.state.messages} users={this.state.users} updateChat={this.updateChat} updateUsers={this.updateUsers}/>
                 <CryptoTest/>
             </div>

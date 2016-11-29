@@ -19,16 +19,20 @@ var ChatRoom = React.createClass({
         const users = this.props.users;
 
         users.forEach( ({publicKey}) => {
-            stompClient.send('/app/hello/500', {}, JSON.stringify({
-                content: content,
-                sender: {
-                    value: 'abc'
-                },
-                receiver: {
-                    value: publicKey
-                }
-            }));
+            this.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, publicKey))
         } )
+    },
+
+    dispatchMessage: function (publicKey, encryptedMessage) {
+        stompClient.send(`/app/hello/${this.props.roomId}` , {}, JSON.stringify({
+            content: encryptedMessage,
+            sender: {
+                value: this.cryptoHelper.publicKey
+            },
+            receiver: {
+                value: publicKey
+            }
+        }));
     },
 
     componentWillMount: function() {

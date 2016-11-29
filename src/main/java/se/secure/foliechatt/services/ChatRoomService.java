@@ -17,14 +17,8 @@ public class ChatRoomService {
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
 
-    private ChatRoomManager chatRoomManager;
-
-    public ChatRoomService() {
-        this.chatRoomManager = new ChatRoomManager();
-    }
-
     public List<Chatter> addUserToRoom(User user, Long roomId) {
-        Optional<ChatRoom> chatRoom = chatRoomManager.getChatRoomById(roomId);
+        Optional<ChatRoom> chatRoom = ChatRoomManager.getChatRoomById(roomId);
         List<Chatter> usersInRoom = new ArrayList<>();
         if(chatRoom.isPresent()){
             chatRoom.get().addUser(new PublicKey(String.valueOf(Math.random())), user);
@@ -35,14 +29,5 @@ public class ChatRoomService {
         return usersInRoom;
 
     }
-
-    public ChatRoomManager getChatRoomManager() {
-        return chatRoomManager;
-    }
-
-    public void setChatRoomManager(ChatRoomManager chatRoomManager) {
-        this.chatRoomManager = chatRoomManager;
-    }
-
 
 }

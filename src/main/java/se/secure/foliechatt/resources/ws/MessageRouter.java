@@ -21,17 +21,14 @@ public class MessageRouter {
     @Autowired
     private ChatRoomService chatRoomService;
 
-    private ChatRoomManager chatRoomManager;
-
     @MessageMapping("/hello/{roomID}")
     public void greeting(@DestinationVariable Long roomID, Message message) throws Exception {
-        chatRoomManager = chatRoomService.getChatRoomManager();
         System.out.println("inside greeting method!");
         System.out.println("message has sender: " + message.getSender().getValue());
         System.out.println("message has receiver: " + message.getReceiver().getValue());
         message.setContent(message.getContent());
 
-        Optional<ChatRoom> maybeChatRoom = chatRoomManager.getChatRoomById(roomID);
+        Optional<ChatRoom> maybeChatRoom = ChatRoomManager.getChatRoomById(roomID);
         ChatRoom chatRoom = maybeChatRoom.orElseThrow(() -> new RuntimeException("Tried to send message chat room that doesn't exist"));
         boolean wasAdded = chatRoom.addUserIfNotPresent(message.getSender());
 

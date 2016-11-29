@@ -13,7 +13,9 @@ public class ChatRoomManager {
 
     public ChatRoomManager() {
 
-        chatRooms = new ArrayList<>();
+        if (chatRooms == null) {
+            chatRooms = new ArrayList<>();
+        }
 
 //        chatRooms = new ArrayList<>();
 //
@@ -29,7 +31,11 @@ public class ChatRoomManager {
 //        chatRooms.add(r2);
     }
 
-    public Optional<ChatRoom> getChatRoomById(Long id) {
+    public static void addChatRoom(ChatRoom chatRoom) {
+        chatRooms.add(chatRoom);
+    }
+
+    public static Optional<ChatRoom> getChatRoomById(Long id) {
         System.out.println("getting chatroom with id " + id);
         return chatRooms.stream()
                 .filter(chatRoom -> chatRoom.getId().equals(id))

@@ -41,7 +41,7 @@ public class UserService {
         return loggedInUsers.containsValue(sessionToken);
     }
 
-    public boolean isValidSessionKeyForUser(User user, String sessionToken) {
+    public boolean isValidsessionTokenForUser(User user, String sessionToken) {
         String expectedSessionToken = loggedInUsers.get(user);
         return sessionToken.equals(expectedSessionToken);
     }

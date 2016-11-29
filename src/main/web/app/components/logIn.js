@@ -2,12 +2,12 @@ var React = require('react');
 
 var LogIn = React.createClass({
     propTypes : {
-        sessionKey: React.PropTypes.string,
-        setSessionKey: React.PropTypes.func.isRequired
+        sessionToken: React.PropTypes.string,
+        setSessionToken: React.PropTypes.func.isRequired
     },
 
     logIn: function() {
-        const setSessionKey = this.props.setSessionKey;
+        const setSessionToken = this.props.setsessionToken;
 
         const logInForm = document.getElementById('logInForm');
 
@@ -25,7 +25,7 @@ var LogIn = React.createClass({
         request.onreadystatechange = function() {
             //Callback triggers on success
             if (this.readyState == 4 && this.status == 200) {
-                setSessionKey(request.responseText);
+                setSessionToken(request.responseText);
                 console.log(request.responseText);
                 //console.log('LOG IN IS GOOD');
             } else if(this.readyState == 4 && this.status == 401) {

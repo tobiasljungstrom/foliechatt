@@ -16,7 +16,8 @@ var ChatRoom = React.createClass({
     },
 
     sendMessage: function() {
-        const content = document.getElementById('messageInput').value;
+        const content = document.getElementById('messageInput' + this.props.roomId).value;
+        console.log("trying to send: ", content);
         const users = this.props.users;
 
         users.forEach( ({publicKey, userAlias}) => {
@@ -41,7 +42,6 @@ var ChatRoom = React.createClass({
     },
 
     componentWillMount: function() {
-        console.log("in ChatRoom.js component will mount. this.props = ", this.props);
         const publicKey = this.props.cryptoHelper.publicKey;
         const updateChat = this.props.updateChat;
         const updateUsers = this.props.updateUsers;
@@ -95,7 +95,7 @@ var ChatRoom = React.createClass({
                 <ul>
                     {renderMessages}
                 </ul>
-                <input type="text" id="messageInput"/>
+                <input type="text" id={"messageInput" + this.props.roomId}/>
                 <button onClick={this.sendMessage}>Send!</button>
             </div>
         );

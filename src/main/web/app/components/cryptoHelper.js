@@ -22,8 +22,8 @@ var CryptoHelper = function CryptoHelper() {
     }
 
     this.encrypt = function(message, receiverPublicKey) {
-        console.log("inside encrypt promise, receiver key is: ", receiverPublicKey);
-        console.log("inside encrypt promise, sender key is: ", self.privateKey);
+        /*console.log("inside encrypt promise, receiver key is: ", receiverPublicKey);
+        console.log("inside encrypt promise, sender key is: ", self.privateKey);*/
         options = {
             data: message,                             // input as String (or Uint8Array)
             publicKeys: openpgp.key.readArmored(receiverPublicKey).keys,  // for encryption
@@ -36,8 +36,8 @@ var CryptoHelper = function CryptoHelper() {
     this.decryptWithSenderKey = function(publicSenderKey) {
         // return a function taking just the message as an arg, with the key variables bound. (good for chaining. see testEncryptAndDecryptMessage)
         return (function decryptMessage(message) {
-            console.log("decrypting with senden key:", publicSenderKey)
-            console.log("decr with receiver private key: ", self.privateKey)
+            /*console.log("decrypting with senden key:", publicSenderKey)
+            console.log("decr with receiver private key: ", self.privateKey)*/
             let options = {
                 message: openpgp.message.readArmored(message),     // parse armored message
                 publicKeys: openpgp.key.readArmored(publicSenderKey).keys,    // for verification (optional)

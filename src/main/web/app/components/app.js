@@ -21,7 +21,7 @@ var App = React.createClass({
 
     },
     setLoggedInUser: function(user) {
-        console.log("setting logged in user to:",user);
+        console.log("setting logged in user to:",user.alias);
         this.setState({ loggedInUser: user });
     },
 
@@ -34,7 +34,7 @@ var App = React.createClass({
     updateChat: function(message, key, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
-        console.log("room idex: ", roomIndex);
+        console.log("room index: ", roomIndex);
         let users = roomList[roomIndex].users;
 
         let userAlias = 'default name';
@@ -71,7 +71,7 @@ var App = React.createClass({
     render: function() {
 
         let loginOrLoginStatus = null;
-        let chatRoom = null;
+        let chatRooms = [];
         if (this.state.sessionToken) {
             loginOrLoginStatus = <p>You are logged in as {this.state.loggedInUser.alias}</p>;
 
@@ -81,23 +81,26 @@ var App = React.createClass({
         }
 
         if(this.state.roomList.length>0){
-            console.log('Start chat');
-            chatRoom = <ChatRoom
-                            loggedInUser={this.state.loggedInUser}
-                            messages={this.state.roomList[0].messages}
-                            users={this.state.roomList[0].users}
-                            roomId={this.state.roomList[0].roomId}
-                            cryptoHelper={this.state.roomList[0].cryptoHelper}
-                            updateChat={this.updateChat}
-                            updateUsers={this.updateUsers}/>;
+            this.state.roomList.forEach( (room, index) => {
+                chatRooms[index] = <ChatRoom
+                    key={index}
+                    loggedInUser={this.state.loggedInUser}
+                    messages={this.state.roomList[index].messages}
+                    users={this.state.roomList[index].users}
+                    roomId={this.state.roomList[index].roomId}
+                    cryptoHelper={this.state.roomList[index].cryptoHelper}
+                    updateChat={this.updateChat}
+                    updateUsers={this.updateUsers}/>
+            });
         }
 
 
 
         return (
             <div>
-                <NewUser/> {loginOrLoginStatus}
-                {chatRoom}
+                <NewUser/>
+                {loginOrLoginStatus}
+                {chatRooms}
                 <ChatRoomDialog sessionToken={this.state.sessionToken} createChatRoom={this.createChatRoom}/>
                 {/* <CryptoTest/> */}
             </div>

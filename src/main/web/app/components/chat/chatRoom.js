@@ -47,6 +47,7 @@ var ChatRoom = React.createClass({
         const updateUsers = this.props.updateUsers;
         const roomId = this.props.roomId;
         const loggedInUser = this.props.loggedInUser;
+        const decryptWithSenderKey = this.props.cryptoHelper.decryptWithSenderKey;
 
         const socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
         stompClient = Stomp.over(socket);
@@ -59,7 +60,9 @@ var ChatRoom = React.createClass({
                 let content = messageBody.content;
                 let user = messageBody.sender.value;
 
-                updateChat(content, user, roomId);
+                decryptWithSenderKey(messageBody.sender.value)(content).then( function(decryptedMessage) {
+                    updateChat(decryptedMessage.data, user, roomId);
+                });
             });
 
             stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom){

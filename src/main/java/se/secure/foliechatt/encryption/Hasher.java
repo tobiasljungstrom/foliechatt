@@ -17,7 +17,7 @@ public class Hasher {
         byte[] saltBytes = doSalt();
 
         PBEKeySpec spec = new PBEKeySpec(chars, saltBytes, iterations, 64 * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
         byte[] hashBytes = skf.generateSecret(spec).getEncoded();
 
         String salt = toHex(saltBytes);
@@ -27,13 +27,12 @@ public class Hasher {
 
     }
 
-    private static boolean validateHash(String incomingHash, Password storedHash) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        int iterations = storedHash.getIterations();
-        byte[] salt = fromHex(storedHash.getSalt());
-        byte[] hash = fromHex(storedHash.getHash());
+    public static boolean validateHash(String incomingHash, String storedPassword, String storedSalt, int iterations) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] salt = fromHex(storedSalt);
+        byte[] hash = fromHex(storedPassword);
 
         PBEKeySpec spec = new PBEKeySpec(incomingHash.toCharArray(), salt, iterations, hash.length * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
         byte[] testHash = skf.generateSecret(spec).getEncoded();
 
         int diff = hash.length ^ testHash.length;

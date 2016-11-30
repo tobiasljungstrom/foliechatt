@@ -10,7 +10,9 @@ import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.services.UserService;
 
-import java.util.Map;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 
 @RestController
 @RequestMapping(value = "/api/v.1/login")
@@ -21,7 +23,7 @@ public class LoginController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) {
+    public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         User user;
         try {

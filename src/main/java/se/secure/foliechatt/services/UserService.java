@@ -88,7 +88,7 @@ public class UserService {
         return userExists;
     }
 
-    public User authenticateUser(LoginAttempt loginAttempt) throws InvalidLoginException {
+    public User authenticateUser(LoginAttempt loginAttempt) throws InvalidLoginException, InvalidKeySpecException, NoSuchAlgorithmException {
         TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", loginAttempt.getEmail());
         User result = query.getSingleResult();
@@ -98,7 +98,7 @@ public class UserService {
         }
 
         //TODO: Use hash validation instead
-        if(result.getPassword().equals(loginAttempt.getPassword())){
+        if(Hasher.validateHash(loginAttempt.getPassword(), result.getPassword(), result.getSalt(), result.getIterations())){
             return result;
         }
 

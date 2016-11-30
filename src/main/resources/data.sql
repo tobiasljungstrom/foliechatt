@@ -1,3 +1,6 @@
 /* USERS */
-INSERT INTO user (alias, email, password)
-	VALUES ('GeneratedUser1', 'user1@mail.com', 'user1password'),('tester', 'mail', '123');
+INSERT INTO user (alias, email, iterations, password, salt)
+	VALUES
+    ('Lara', 'user1', 1000, '271e2728b37df8410a1fa5d2a5514299fbf6495e14f6ee6f924481224e8edff75f91c2f582e26834ef30cdb47f9d3bd5dded1ffcf0a603ecd6bc199820c070f8', 'fd26bda569c99c56833b106f4e992dc3c7bcb1aeac7b325cc0db8c56ede1a40e'),
+    ('Samus', 'user2', 1000, '3fc3be2f2db749c8f72a320b46c5ebfd06c25da00e3a61779dca7587d938b088a992295ddd35f411cc1c8c2f4a7357ec3c0c4134f5f32908779f8a4f4dd9ae9a', '8e1b65b8c6c29b1a157f3100c34d5621205494b1bdfb250ff7d42bebc743c7fd'),
+    ('Bayonetta', 'user3', 1000, 'a437290c349705bff81c002e326ca859d97fd96640bcda9ddf27c94bc413af1ef76723c78f6644743ad7d46aa6a5a2e33ffb4d669b7f81e3b0c65ccfda22ab2d', '164f272527f6a89032af92c9819c138be604c73950ea6e4dc3080e24eedfc0c1');

@@ -11,6 +11,7 @@ public class ChatRoom {
     //TODO MAKE GUEST LIST
     private String id;
     private String name;
+    @JsonIgnore
     private Map<PublicKey, User> roomUsers;
     private List<User> allowedUsers;
 

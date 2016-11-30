@@ -35,8 +35,6 @@ public class ChatRoomController {
         }
 
         User user = maybeUser.get();
-
-        // TODO GET PUBLIC KEY FROM FRONEND!
         ChatRoom chatRoom = new ChatRoom(user, new PublicKey(publicKey));
         ChatRoomManager.getInstance().addChatRoom(chatRoom);
 

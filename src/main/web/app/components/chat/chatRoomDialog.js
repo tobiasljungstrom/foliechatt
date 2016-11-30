@@ -20,6 +20,7 @@ var ChatRoomDialog = React.createClass({
             //Callback triggers on success
             if (this.readyState == 4 && this.status == 200) {
                 var createdChatRoom = JSON.parse(request.responseText);
+
                 createChatRoom(CH, createdChatRoom.id, createdChatRoom.users);
                 console.log("Created chatroom", createdChatRoom);
             } else if(this.readyState == 4 && this.status == 401) {

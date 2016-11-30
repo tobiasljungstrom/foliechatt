@@ -17,7 +17,7 @@ public class ChatRoomService {
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
 
-    public List<Chatter> addUserToRoom(User user, Long roomId) {
+    public List<Chatter> addUserToRoom(User user, String roomId) {
         Optional<ChatRoom> chatRoom = ChatRoomManager.getChatRoomById(roomId);
         List<Chatter> usersInRoom = new ArrayList<>();
         if(chatRoom.isPresent()){

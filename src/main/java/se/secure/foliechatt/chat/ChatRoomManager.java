@@ -9,13 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class ChatRoomManager {
-    private static List<ChatRoom> chatRooms;
+    private static List<ChatRoom> chatRooms = new ArrayList<>();
 
-    public ChatRoomManager() {
-
-        if (chatRooms == null) {
-            chatRooms = new ArrayList<>();
-        }
 
 //        chatRooms = new ArrayList<>();
 //
@@ -29,13 +24,13 @@ public class ChatRoomManager {
 //
 //        chatRooms.add(r1);
 //        chatRooms.add(r2);
-    }
+
 
     public static void addChatRoom(ChatRoom chatRoom) {
         chatRooms.add(chatRoom);
     }
 
-    public static Optional<ChatRoom> getChatRoomById(Long id) {
+    public static Optional<ChatRoom> getChatRoomById(String id) {
         System.out.println("getting chatroom with id " + id);
         return chatRooms.stream()
                 .filter(chatRoom -> chatRoom.getId().equals(id))

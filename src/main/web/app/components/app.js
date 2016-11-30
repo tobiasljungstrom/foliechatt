@@ -11,12 +11,18 @@ var App = React.createClass({
     getInitialState: function() {
         return {
             sessionToken: null,
-            roomList: []
+            roomList: [],
+            loggedInUser: null
         };
     },
     setSessionToken: function(sessionToken) {
+        console.log("setting sessionToken", sessionToken);
         this.setState({sessionToken: sessionToken});
 
+    },
+    setLoggedInUser: function(user) {
+        console.log("setting logged in user to:",user);
+        this.setState({ loggedInUser: user });
     },
 
     createChatRoom: function(CH, roomId, users) {
@@ -28,6 +34,7 @@ var App = React.createClass({
     updateChat: function(message, key, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
+        console.log("room idex: ", roomIndex);
         let users = roomList[roomIndex].users;
 
         let userAlias = 'default name';
@@ -52,12 +59,13 @@ var App = React.createClass({
 
     findRoomById: function(roomId) {
         let roomList = this.state.roomList;
-        for(let i; i<roomList.length; i++){
+        console.log("room list is", roomList);
+        for(let i = 0; i<roomList.length; i++){
             if(roomList[i].roomId == roomId){
                 return i;
-
             }
         }
+        console.log("could not find room with id :", roomId);
     },
 
     render: function() {
@@ -65,17 +73,23 @@ var App = React.createClass({
         let loginOrLoginStatus = null;
         let chatRoom = null;
         if (this.state.sessionToken) {
-            loginOrLoginStatus = <p>You are logged in</p>;
+            loginOrLoginStatus = <p>You are logged in as {this.state.loggedInUser.alias}</p>;
 
 
         } else {
-            loginOrLoginStatus = <LogIn setSessionToken={this.setSessionToken} sessionToken={this.state.sessionToken}/>;
+            loginOrLoginStatus = <LogIn setLoggedInUser={ this.setLoggedInUser } setSessionToken={this.setSessionToken}/>;
         }
 
         if(this.state.roomList.length>0){
             console.log('Start chat');
-            chatRoom = <ChatRoom messages={this.state.roomList[0].messages} users={this.state.roomList[0].users}
-                roomId={this.state.roomList[0].roomId} cryptoHelper={this.state.roomList[0].cryptoHelper} updateChat={this.updateChat} updateUsers={this.updateUsers}/>;
+            chatRoom = <ChatRoom
+                            loggedInUser={this.state.loggedInUser}
+                            messages={this.state.roomList[0].messages}
+                            users={this.state.roomList[0].users}
+                            roomId={this.state.roomList[0].roomId}
+                            cryptoHelper={this.state.roomList[0].cryptoHelper}
+                            updateChat={this.updateChat}
+                            updateUsers={this.updateUsers}/>;
         }
 
 

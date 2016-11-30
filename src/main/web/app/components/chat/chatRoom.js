@@ -7,6 +7,7 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
+        loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
         updateChat: React.PropTypes.func.isRequired,
@@ -18,45 +19,53 @@ var ChatRoom = React.createClass({
         const content = document.getElementById('messageInput').value;
         const users = this.props.users;
 
-        users.forEach( ({publicKey}) => {
-            this.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, publicKey))
+        users.forEach( ({publicKey, userAlias}) => {
+            this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias))
         } )
     },
 
-    dispatchMessage: function (publicKey, encryptedMessage) {
-        stompClient.send(`/app/hello/${this.props.roomId}` , {}, JSON.stringify({
-            content: encryptedMessage,
+    dispatchMessage: function (userAlias, encryptedMessage) {
+        console.log("sending to user alias: ", userAlias);
+        let roomId = this.props.roomId;
+        let senderPublicKey = this.props.cryptoHelper.publicKey;
+
+        stompClient.send(`/app/hello/${roomId}` , {}, JSON.stringify({
+            content: encryptedMessage.data,
             sender: {
-                value: this.cryptoHelper.publicKey
+                value: senderPublicKey
             },
             receiver: {
-                value: publicKey
+                value: userAlias
             }
         }));
     },
 
     componentWillMount: function() {
+        console.log("in ChatRoom.js component will mount. this.props = ", this.props);
         const publicKey = this.props.cryptoHelper.publicKey;
         const updateChat = this.props.updateChat;
         const updateUsers = this.props.updateUsers;
+        const roomId = this.props.roomId;
+        const loggedInUser = this.props.loggedInUser;
 
         const socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
         stompClient = Stomp.over(socket);
         // stompClient.debug = null;
 
         stompClient.connect({}, function() {
-            stompClient.subscribe(`/topic/greetings/${this.props.roomId}/${publicKey}`, function(message) {
 
+            stompClient.subscribe(`/topic/greetings/${roomId}/${loggedInUser.alias}`, function(message) {
                 let messageBody = JSON.parse(message.body);
                 let content = messageBody.content;
                 let user = messageBody.sender.value;
 
-                updateChat(content, user);
+                updateChat(content, user, roomId);
             });
-            stompClient.subscribe(`/topic/greetings/${this.props.roomId}/status`, function(usersInRoom){
+
+            stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom){
                 let users = JSON.parse(usersInRoom.body);
-                updateUsers(users, this.props.roomId);
-            })
+                updateUsers(users, roomId);
+            });
         });
     },
 

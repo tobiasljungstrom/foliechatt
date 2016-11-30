@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.secure.foliechatt.chat.ChatRoomManager;
 import se.secure.foliechatt.domain.ChatRoom;
 import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.domain.Chatter;
@@ -34,8 +35,6 @@ public class ChatRoomController {
         }
 
         User user = maybeUser.get();
-
-        // TODO GET PUBLIC KEY FROM FRONEND!
         ChatRoom chatRoom = new ChatRoom(user, new PublicKey(publicKey));
 
         //TODO REMOVE
@@ -43,13 +42,15 @@ public class ChatRoomController {
             System.out.println(chatRoom.getUsers().get(i).getUserAlias());
         }
 
+        ChatRoomManager.addChatRoom(chatRoom);
+
 
         return ResponseEntity.ok(chatRoom);
     }
 
 
     @RequestMapping(value = "/{roomId}", method = RequestMethod.POST)
-    public ResponseEntity joinChatRoom(@PathVariable Long roomId, @RequestBody String sessionToken) {
+    public ResponseEntity joinChatRoom(@PathVariable String roomId, @RequestBody String sessionToken) {
 
         Optional<User> maybeUser = userService.getUserBySessionToken(sessionToken);
 

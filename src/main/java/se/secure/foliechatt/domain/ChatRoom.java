@@ -63,8 +63,18 @@ public class ChatRoom {
     }
 
     public User addUser(PublicKey publicKey, User value) {
+        removeIfPresent(value);
         roomUsers.put(publicKey, value);
         return roomUsers.put(publicKey, value);
+    }
+
+    public void removeIfPresent(User user) {
+        Optional<Map.Entry<PublicKey,User>> setToReplace = roomUsers.entrySet().stream().filter(publicKeyUserEntry ->
+                publicKeyUserEntry.getValue().equals(user)).findFirst();
+        if(setToReplace.isPresent()){
+            roomUsers.remove(setToReplace.get().getKey());
+        }
+
     }
 
     public User remove(Object key) {

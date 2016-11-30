@@ -30,12 +30,6 @@ public class MessageRouter {
 
         Optional<ChatRoom> maybeChatRoom = ChatRoomManager.getInstance().getChatRoomById(roomID);
         ChatRoom chatRoom = maybeChatRoom.orElseThrow(() -> new RuntimeException("Tried to send message chat room that doesn't exist"));
-        boolean wasAdded = chatRoom.addUserIfNotPresent(message.getSender());
-
-        if (wasAdded) {
-            System.out.println("returning updated list of users to /status");
-            simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/status", chatRoom.getUsers());
-        }
 
         System.out.println("forwarding message to " + message.getReceiver().getValue());
         simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/" + message.getReceiver().getValue(), message);

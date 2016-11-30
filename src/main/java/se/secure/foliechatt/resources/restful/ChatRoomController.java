@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.secure.foliechatt.chat.ChatRoomManager;
 import se.secure.foliechatt.domain.ChatRoom;
 import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.domain.Chatter;
@@ -37,6 +38,7 @@ public class ChatRoomController {
 
         // TODO GET PUBLIC KEY FROM FRONEND!
         ChatRoom chatRoom = new ChatRoom(user, new PublicKey(publicKey));
+        ChatRoomManager.getInstance().addChatRoom(chatRoom);
 
         //TODO REMOVE
         for (int i = 0; i < chatRoom.getUsers().size(); i++ ){
@@ -49,16 +51,21 @@ public class ChatRoomController {
 
 
     @RequestMapping(value = "/{roomId}", method = RequestMethod.POST)
-    public ResponseEntity joinChatRoom(@PathVariable Long roomId, @RequestBody String sessionToken) {
+    public ResponseEntity joinChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String publicKey) {
 
         Optional<User> maybeUser = userService.getUserBySessionToken(sessionToken);
+        Optional<ChatRoom> chatRoom = ChatRoomManager.getInstance().getChatRoomById(roomId);
 
-        if(! maybeUser.isPresent()) {
+        if(!maybeUser.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        if(!chatRoom.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
-        List<Chatter> users =  chatRoomService.addUserToRoom(maybeUser.get(), roomId);
+        List<Chatter> users =  chatRoomService.addUserToRoom(new PublicKey(publicKey), maybeUser.get(), roomId);
 
-        return ResponseEntity.ok(users);
+
+        return ResponseEntity.ok(chatRoom.get());
     }
 }

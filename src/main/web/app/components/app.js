@@ -25,6 +25,14 @@ var App = React.createClass({
         this.setState({roomList: roomList});
     },
 
+    // joinChatRoom: function(roomId, users) {
+    //     let roomList = this.state.roomList;
+    //     roomList.push({})
+    //     let chatRoom = roomList[findRoomById(roomId)];
+    //     chatRoom.users = users;
+    //     this.setState({roomList: roomList});
+    // },
+
     updateChat: function(message, key, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
@@ -55,7 +63,6 @@ var App = React.createClass({
         for(let i; i<roomList.length; i++){
             if(roomList[i].roomId == roomId){
                 return i;
-
             }
         }
     },
@@ -74,6 +81,7 @@ var App = React.createClass({
 
         if(this.state.roomList.length>0){
             console.log('Start chat');
+            console.log(this.state.roomList);
             chatRoom = <ChatRoom messages={this.state.roomList[0].messages} users={this.state.roomList[0].users}
                 roomId={this.state.roomList[0].roomId} cryptoHelper={this.state.roomList[0].cryptoHelper} updateChat={this.updateChat} updateUsers={this.updateUsers}/>;
         }

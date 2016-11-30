@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ChatRoomManager {
+    private static ChatRoomManager instance = null;
     private static List<ChatRoom> chatRooms;
 
     public ChatRoomManager() {
@@ -17,25 +18,20 @@ public class ChatRoomManager {
             chatRooms = new ArrayList<>();
         }
 
-//        chatRooms = new ArrayList<>();
-//
-//        ChatRoom r1 = new ChatRoom();
-//        r1.addUser(new PublicKey("Erik"), new User("Erik"));
-//        r1.addUser(new PublicKey("Henrik"), new User("Henrik"));
-//
-//        ChatRoom r2 = new ChatRoom(new Long(555));
-//        r2.addUser(new PublicKey("Olle"), new User("Olle"));
-//        r2.addUser(new PublicKey("Pelle"), new User("Pelle"));
-//
-//        chatRooms.add(r1);
-//        chatRooms.add(r2);
+    }
+
+    public static ChatRoomManager getInstance() {
+        if(instance == null) {
+            instance = new ChatRoomManager();
+        }
+        return instance;
     }
 
     public static void addChatRoom(ChatRoom chatRoom) {
         chatRooms.add(chatRoom);
     }
 
-    public static Optional<ChatRoom> getChatRoomById(Long id) {
+    public static Optional<ChatRoom> getChatRoomById(String id) {
         System.out.println("getting chatroom with id " + id);
         return chatRooms.stream()
                 .filter(chatRoom -> chatRoom.getId().equals(id))

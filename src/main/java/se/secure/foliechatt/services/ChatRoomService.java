@@ -17,11 +17,11 @@ public class ChatRoomService {
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
 
-    public List<Chatter> addUserToRoom(User user, Long roomId) {
-        Optional<ChatRoom> chatRoom = ChatRoomManager.getChatRoomById(roomId);
+    public List<Chatter> addUserToRoom(PublicKey publicKey, User user, String roomId) {
+        Optional<ChatRoom> chatRoom = ChatRoomManager.getInstance().getChatRoomById(roomId);
         List<Chatter> usersInRoom = new ArrayList<>();
         if(chatRoom.isPresent()){
-            chatRoom.get().addUser(new PublicKey(String.valueOf(Math.random())), user);
+            chatRoom.get().addUser(publicKey, user);
             usersInRoom = chatRoom.get().getUsers();
             //TODO: Use the resource instead of directly calling template
             simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomId + "/status", usersInRoom);

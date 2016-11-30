@@ -49,7 +49,13 @@ var ChatRoom = React.createClass({
         const loggedInUser = this.props.loggedInUser;
         const decryptWithSenderKey = this.props.cryptoHelper.decryptWithSenderKey;
 
-        const socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
+        let socket = null;
+        let url = window.location.href;
+        if(url.includes("webpack")) {
+            socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
+        } else {
+            socket = new SockJS('/foliechatt/folieSocket');
+        }
         stompClient = Stomp.over(socket);
         // stompClient.debug = null;
 

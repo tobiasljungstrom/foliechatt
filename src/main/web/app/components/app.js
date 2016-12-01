@@ -4,7 +4,8 @@ var NewUser = require('./newUser');
 var LogIn = require('./logIn');
 var ChatRoom = require('./chat/chatRoom');
 var ChatRoomDialog = require('./chat/chatRoomDialog');
-// var CryptoTest = require('./cryptoTest');
+
+require('../css/main.scss');
 
 var App = React.createClass({
 

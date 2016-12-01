@@ -66,10 +66,14 @@ public class UserService {
 
 
 
-    public User saveUser(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public User saveUser(User user) {
 
-        Hasher hasher = new Hasher();
-        Password password = hasher.GenerateHash(user.getPassword());
+        Password password = null;
+        try {
+            password = Hasher.GenerateHash(user.getPassword());
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
 
         user.setFullPassword(password);
 
@@ -88,7 +92,7 @@ public class UserService {
         return userExists;
     }
 
-    public User authenticateUser(LoginAttempt loginAttempt) throws InvalidLoginException, InvalidKeySpecException, NoSuchAlgorithmException {
+    public User authenticateUser(LoginAttempt loginAttempt) throws InvalidLoginException {
         TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", loginAttempt.getEmail());
         User result = query.getSingleResult();
@@ -97,8 +101,15 @@ public class UserService {
             throw new InvalidLoginException("User not found");
         }
 
-        //TODO: Use hash validation instead
-        if(Hasher.validateHash(loginAttempt.getPassword(), result.getPassword(), result.getSalt(), result.getIterations())){
+        boolean passwordIsValid = false;
+
+        try {
+            passwordIsValid = Hasher.validateHash(loginAttempt.getPassword(), result.getPassword(), result.getSalt(), result.getIterations());
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+
+        if(passwordIsValid){
             return result;
         }
 

@@ -23,7 +23,7 @@ public class LoginController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) {
 
         User user;
         try {

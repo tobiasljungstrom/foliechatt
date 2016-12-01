@@ -7,7 +7,6 @@ var ChatRoomDialog = require('./chat/chatRoomDialog');
 // var CryptoTest = require('./cryptoTest');
 
 var App = React.createClass({
-
     getInitialState: function() {
         return {
             sessionToken: null,
@@ -68,6 +67,19 @@ var App = React.createClass({
         console.log("could not find room with id :", roomId);
     },
 
+    componentDidMount: function() {
+        let location = window.location.href;
+        let baseUrl;
+        if(location.includes('localhost:8080')){
+            baseUrl = 'http://localhost:9876/foliechatt/';
+            console.log('has webpack');
+        } else {
+            baseUrl = '/foliechatt/';
+            console.log('has not webpack', location);
+        }
+        this.setState({baseUrl: baseUrl});
+    },
+
     render: function() {
 
         let loginOrLoginStatus = null;
@@ -77,13 +89,14 @@ var App = React.createClass({
 
 
         } else {
-            loginOrLoginStatus = <LogIn setLoggedInUser={ this.setLoggedInUser } setSessionToken={this.setSessionToken}/>;
+            loginOrLoginStatus = <LogIn baseUrl={this.state.baseUrl} setLoggedInUser={ this.setLoggedInUser } setSessionToken={this.setSessionToken}/>;
         }
 
         if(this.state.roomList.length>0){
             this.state.roomList.forEach( (room, index) => {
                 chatRooms[index] = <ChatRoom
                     key={index}
+                    baseUrl={this.state.baseUrl}
                     loggedInUser={this.state.loggedInUser}
                     messages={this.state.roomList[index].messages}
                     users={this.state.roomList[index].users}
@@ -98,10 +111,10 @@ var App = React.createClass({
 
         return (
             <div>
-                <NewUser/>
+                <NewUser baseUrl={this.state.baseUrl}/>
                 {loginOrLoginStatus}
                 {chatRooms}
-                <ChatRoomDialog sessionToken={this.state.sessionToken} createChatRoom={this.createChatRoom}/>
+                <ChatRoomDialog baseUrl={this.state.baseUrl} sessionToken={this.state.sessionToken} createChatRoom={this.createChatRoom}/>
                 {/* <CryptoTest/> */}
             </div>
         );

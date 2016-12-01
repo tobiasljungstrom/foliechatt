@@ -7,6 +7,7 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
+        baseUrl: React.PropTypes.object.isRequired,
         loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
@@ -49,13 +50,8 @@ var ChatRoom = React.createClass({
         const loggedInUser = this.props.loggedInUser;
         const decryptWithSenderKey = this.props.cryptoHelper.decryptWithSenderKey;
 
-        let socket = null;
-        let url = window.location.href;
-        if(url.includes("webpack")) {
-            socket = new SockJS('http://localhost:9876/foliechatt/folieSocket');
-        } else {
-            socket = new SockJS('/foliechatt/folieSocket');
-        }
+        let socket = new SockJS(`${this.props.baseUrl}folieSocket`);
+
         stompClient = Stomp.over(socket);
         // stompClient.debug = null;
 

@@ -4,6 +4,7 @@ var CryptoHelper = require('../cryptoHelper.js');
 
 var ChatRoomDialog = React.createClass({
     propTypes :{
+        baseUrl: React.PropTypes.string,
         sessionToken : React.PropTypes.string,
         createChatRoom: React.PropTypes.func
     },
@@ -32,7 +33,7 @@ var ChatRoomDialog = React.createClass({
             }
         };
 
-        request.open('POST', 'http://localhost:9876/foliechatt/api/v.1/chatroom', true);
+        request.open('POST', `${this.props.baseUrl}api/v.1/chatroom`, true);
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('sessionToken', this.props.sessionToken);
         request.send(publicKey);
@@ -53,7 +54,7 @@ var ChatRoomDialog = React.createClass({
             }
         };
 
-        request.open('POST', `http://localhost:9876/foliechatt/api/v.1/chatroom/${roomId}`);
+        request.open('POST', `${this.props.baseUrl}api/v.1/chatroom/${roomId}`);
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('sessionToken', this.props.sessionToken);
         request.send(publicKey);

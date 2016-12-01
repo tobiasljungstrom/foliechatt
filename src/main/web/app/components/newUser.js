@@ -1,6 +1,9 @@
 var React = require('react');
 
 var NewUser = React.createClass({
+    propTypes: {
+        baseUrl: React.PropTypes.string
+    },
 
     submitNewUser: function() {
         const newUserForm = document.getElementById('newUserForm');
@@ -26,7 +29,7 @@ var NewUser = React.createClass({
             }
 
         };
-        request.open('POST', 'http://localhost:9876/foliechatt/api/v.1/users', true);
+        request.open('POST', `${this.props.baseUrl}api/v.1/users`, true);
         request.setRequestHeader('Content-Type', 'application/json');
         request.send(data);
     },

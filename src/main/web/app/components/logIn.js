@@ -2,6 +2,7 @@ var React = require('react');
 
 var LogIn = React.createClass({
     propTypes : {
+        baseUrl: React.PropTypes.string,
         setSessionToken: React.PropTypes.func.isRequired,
         setLoggedInUser: React.PropTypes.func.isRequired
     },
@@ -37,7 +38,7 @@ var LogIn = React.createClass({
             }
 
         };
-        request.open('POST', 'http://localhost:9876/foliechatt/api/v.1/login', true);
+        request.open('POST', `${this.props.baseUrl}api/v.1/login`, true);
         request.setRequestHeader('Content-Type', 'application/json');
         request.send(data);
     },

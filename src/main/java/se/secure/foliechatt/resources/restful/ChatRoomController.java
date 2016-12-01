@@ -31,7 +31,9 @@ public class ChatRoomController {
         Optional<User> maybeUser = userService.getUserBySessionToken(sessionToken);
 
         if(! maybeUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("You must be logged in to create a chat room");
         }
 
         User user = maybeUser.get();
@@ -55,13 +57,17 @@ public class ChatRoomController {
         Optional<ChatRoom> chatRoom = ChatRoomManager.getInstance().getChatRoomById(roomId);
 
         if(!maybeUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("You must be logged in to join a chat room");
         }
         if(!chatRoom.isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("The requested chat room <" + roomId + "> does not exist");
         }
 
-        List<Chatter> users =  chatRoomService.addUserToRoom(new PublicKey(publicKey), maybeUser.get(), roomId);
+        chatRoomService.addUserToRoom(new PublicKey(publicKey), maybeUser.get(), roomId);
 
 
         return ResponseEntity.ok(chatRoom.get());

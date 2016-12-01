@@ -10,6 +10,7 @@ import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.persistence.UserRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.security.NoSuchAlgorithmException;
@@ -92,14 +93,11 @@ public class UserService {
         return userExists;
     }
 
-    public User authenticateUser(LoginAttempt loginAttempt) throws InvalidLoginException {
+    public User authenticateUser(LoginAttempt loginAttempt) throws NoResultException, InvalidLoginException {
         TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", loginAttempt.getEmail());
-        User result = query.getSingleResult();
 
-        if(result == null){
-            throw new InvalidLoginException("User not found");
-        }
+        User result = query.getSingleResult();
 
         boolean passwordIsValid = false;
 

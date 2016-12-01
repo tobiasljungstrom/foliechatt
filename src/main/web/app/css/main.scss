@@ -1,3 +1,26 @@
 body {
+    font: {
+        family: sans-serif;
+        size: 100%;
+    }
     padding: 1rem;
 }
+
+form, .chatRoomDialog, .chatRoom{
+    border: 1px solid lightgrey;
+    margin: 1rem;
+    padding: 1rem;
+
+    .formTitle {
+        font-size: 120%;
+        color:grey;
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        margin-bottom: 1rem;
+        border-bottom: 1px solid lightgrey;
+    }
+}
+
+@import './reset.css';

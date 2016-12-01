@@ -61,7 +61,7 @@ var ChatRoomDialog = React.createClass({
 
     render : function() {
         return (
-            <div>
+            <div className='chatRoomDialog'>
                 <div>
                     <button onClick={this.createChatRoom}>Create new chatroom</button>
                 </div>

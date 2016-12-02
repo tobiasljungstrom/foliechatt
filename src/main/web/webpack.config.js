@@ -28,5 +28,7 @@ module.exports = {
         path: __dirname + '/../resources/static'
     },
 
-    plugins: [HTMLWebpackPluginConfig]
+    plugins: [HTMLWebpackPluginConfig],
+
+    devServer: { inline: true }
 };

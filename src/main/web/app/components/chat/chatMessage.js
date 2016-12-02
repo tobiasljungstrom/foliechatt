@@ -11,12 +11,12 @@ var ChatMessage = React.createClass({
 
     render: function() {
         return (
-            <li>
-                <span>{this.props.userName}: </span>
-                <span>{this.props.messageText}</span>
+            <li className="chatMessage">
+                <span className="userName">{this.props.userName}: </span>
+                <span className="messageText">{this.props.messageText}</span>
             </li>
         );
     }
-})
+});
 
 module.exports = ChatMessage;

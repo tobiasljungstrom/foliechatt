@@ -59,7 +59,7 @@ var LogIn = React.createClass({
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="button" onClick={this.logIn} value="Log In"/></td>
+                            <td><div className="btn btn-default" onClick={this.logIn}>Log In</div></td>
                         </tr>
                     </tbody>
                 </table>

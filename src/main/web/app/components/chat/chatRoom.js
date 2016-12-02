@@ -22,8 +22,8 @@ var ChatRoom = React.createClass({
         const users = this.props.users;
 
         users.forEach( ({publicKey, userAlias}) => {
-            this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias))
-        } )
+            this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias));
+        });
     },
 
     dispatchMessage: function (userAlias, encryptedMessage) {
@@ -43,7 +43,6 @@ var ChatRoom = React.createClass({
     },
 
     componentWillMount: function() {
-        const publicKey = this.props.cryptoHelper.publicKey;
         const updateChat = this.props.updateChat;
         const updateUsers = this.props.updateUsers;
         const roomId = this.props.roomId;
@@ -88,17 +87,27 @@ var ChatRoom = React.createClass({
 
         return (
             <div className="chatRoom">
-                Users in room:
-                <ul>
-                    {usersInRoom}
-                </ul>
-
-                Chat:
-                <ul>
-                    {renderMessages}
-                </ul>
-                <input type="text" id={"messageInput" + this.props.roomId}/>
-                <button onClick={this.sendMessage}>Send!</button>
+                <div className="row">
+                    <div className="col-md-9">
+                        <div className="chatBox">
+                            <h3>Room ID: {this.props.roomId}</h3>
+                            <ul className="list">
+                                <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/>
+                                {renderMessages}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="userList">
+                            <h3>Users in room</h3>
+                            <ul className="list">
+                                {usersInRoom}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <input type="text" id={"messageInput" + this.props.roomId} placeholder="Type message"/>
+                <div className="btn btn-default sendButton" onClick={this.sendMessage}>Send</div>
             </div>
         );
 

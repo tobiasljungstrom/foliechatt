@@ -54,7 +54,7 @@ var NewUser = React.createClass({
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="button" onClick={this.submitNewUser} value="Submit"/></td>
+                            <td><div className="btn btn-default" onClick={this.submitNewUser}>Submit</div></td>
                         </tr>
                     </tbody>
                 </table>

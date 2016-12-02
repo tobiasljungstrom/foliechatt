@@ -2,10 +2,8 @@ package se.secure.foliechatt.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.secure.foliechatt.domain.LoginAttempt;
-import se.secure.foliechatt.domain.Password;
-import se.secure.foliechatt.domain.User;
-import se.secure.foliechatt.encryption.Hasher;
+import se.secure.foliechatt.domain.*;
+import se.secure.foliechatt.security.hashing.Hasher;
 import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.persistence.UserRepository;
 
@@ -14,10 +12,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import static se.secure.foliechatt.domain.UserManager.*;
+import static se.secure.foliechatt.security.hashing.Hasher.GenerateHash;
+
 
 @SuppressWarnings("JpaQueryApiInspection")
 @Service
@@ -27,49 +26,23 @@ public class UserService {
     UserRepository repo;
     @PersistenceContext
     EntityManager em;
-    private static Map<User, String> loggedInUsers = new HashMap<>();
 
-    public void addUserAsLoggedIn(User user, String sessionToken) {
-        loggedInUsers.put(user, sessionToken);
-    }
 
-    public boolean userIsLoggedIn(User user) {
-        return loggedInUsers.get(user) != null;
-    }
-
-    public boolean isValidSessionToken(String sessionToken) {
-        return loggedInUsers.containsValue(sessionToken);
-    }
-
-    public boolean isValidsessionTokenForUser(User user, String sessionToken) {
-        String expectedSessionToken = loggedInUsers.get(user);
-        return sessionToken.equals(expectedSessionToken);
-    }
-
-    public Optional<User> getUserBySessionToken(String sessionToken) {
-        return loggedInUsers.entrySet().stream()
-                .filter( entry -> entry.getValue().equals(sessionToken))
-                .map(entry -> entry.getKey())
-                .findAny();
-    }
-
-    public String getUniqueSessionToken(User user) {
-        String sessionToken = null;
-        try {
-            sessionToken = Hasher.GenerateHash(user.toString() + Math.random()).getHash();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public LoggedInUser addUserAsLoggedIn(User user) {
+        LoggedInUser loggedInUser = new LoggedInUser(user);
+        int userIndex = indexOfLoggedInUser(user);
+        if (userIndex > -1){
+            setLoggedInUser(userIndex, loggedInUser);
+            return loggedInUser;
         }
-
-        return sessionToken;
+        addLoggedInUser(loggedInUser);
+        return loggedInUser;
     }
-
-
 
     public User saveUser(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         Hasher hasher = new Hasher();
-        Password password = hasher.GenerateHash(user.getPassword());
+        Password password = GenerateHash(user.getPassword());
 
         user.setFullPassword(password);
 

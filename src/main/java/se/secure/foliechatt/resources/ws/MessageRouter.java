@@ -28,8 +28,10 @@ public class MessageRouter {
         System.out.println("message has receiver: " + message.getReceiver().getValue());
         message.setContent(message.getContent());
 
-        Optional<ChatRoom> maybeChatRoom = ChatRoomManager.getInstance().getChatRoomById(roomID);
-        ChatRoom chatRoom = maybeChatRoom.orElseThrow(() -> new RuntimeException("Tried to send message chat room that doesn't exist"));
+        ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomID);
+        if (chatRoom == null){
+            throw new RuntimeException("Tried to send message chat room that doesn't exist");
+        }
 
         System.out.println("forwarding message to " + message.getReceiver().getValue());
         simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomID + "/" + message.getReceiver().getValue(), message);

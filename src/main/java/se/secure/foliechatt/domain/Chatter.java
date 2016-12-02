@@ -1,19 +1,25 @@
 package se.secure.foliechatt.domain;
 
-import se.secure.foliechatt.encryption.PublicKey;
+import se.secure.foliechatt.security.encryption.PublicKey;
 
 public class Chatter {
 
+    private User user;
     private String userAlias;
     private String publicKey;
 
-    public Chatter(PublicKey key, User user) {
+    public Chatter(User user, String publicKey) {
+        this.user = user;
         this.userAlias = user.getAlias();
-        this.publicKey = key.getValue();
+        this.publicKey = publicKey;
     }
 
     public String getUserAlias() {
         return userAlias;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public String getPublicKey() {

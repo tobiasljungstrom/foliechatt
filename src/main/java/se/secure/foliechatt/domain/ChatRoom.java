@@ -1,52 +1,32 @@
 package se.secure.foliechatt.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.secure.foliechatt.encryption.PublicKey;
+import se.secure.foliechatt.security.encryption.PublicKey;
 
 import java.util.*;
 
 public class ChatRoom {
 
     private static final int CHATROOM_ID_LENGTH = 10;
-    //TODO MAKE GUEST LIST
+
     private String id;
     private String name;
     @JsonIgnore
-    private Map<PublicKey, User> roomUsers;
+    private List<Chatter> chatters;
+    @JsonIgnore
     private List<User> allowedUsers;
 
-    public ChatRoom(User initialUser, PublicKey publicKey) {
-        roomUsers = new HashMap<PublicKey, User>();
-        allowedUsers = new ArrayList<>();              // invitelist
+    public ChatRoom(User initialUser, String publicKey) {
+        this.id = generateUniqueChatRoomId();
+        chatters = new ArrayList<>();
+        allowedUsers = new ArrayList<>();
 
-        this.id = getUniqueChatId();
         allowedUsers.add(initialUser);
-        addUser(publicKey, initialUser);
+        Chatter initialChatter = new Chatter(initialUser, publicKey);
+        chatters.add(initialChatter);
     }
 
-    public boolean addUserIfNotPresent(PublicKey publicKey) {
-
-        Boolean u = roomUsers.containsKey(publicKey.getValue());
-
-        boolean doesNotExists =  roomUsers.keySet().stream()
-                .filter(k -> k.getValue().equals(publicKey.getValue()))
-                .count() == 0l;
-        if(doesNotExists) {
-            System.out.println("adding user with publicKey " + publicKey.getValue() + " to chatroom with id " + id);
-            addUser(publicKey, new User("Bob"));
-            return true;
-        } else {
-            // nothing added, did exist
-            return false;
-        }
-
-    }
-
-    private void inviteUser(User user) {
-        allowedUsers.add(user);
-    }
-
-    private String getUniqueChatId() {
+    private String generateUniqueChatRoomId() {
         Random randomService = new Random();
         StringBuilder sb = new StringBuilder();
         while (sb.length() < CHATROOM_ID_LENGTH) {
@@ -55,31 +35,42 @@ public class ChatRoom {
         return sb.toString();
     }
 
-    public List<Chatter> getUsers(){
-        List<Chatter> users = new ArrayList<>();
-        for (Map.Entry<PublicKey, User> entry  : roomUsers.entrySet()) {
-            users.add(new Chatter(entry.getKey(), entry.getValue()));
+    private void inviteUser(User user) {
+        allowedUsers.add(user);
+    }
+
+    public Boolean isUserInChatRoom(User user) {
+        int index = indexOfUserInChatters(user);
+        return index > -1;
+    }
+
+    private int indexOfPublicKeyInChatters(String publicKey) {
+        for (Chatter chatter: chatters) {
+            if (chatter.getPublicKey().equals(publicKey)){
+                return chatters.indexOf(chatter);
+            }
         }
-        return users;
+        return -1;
     }
 
-    public User addUser(PublicKey publicKey, User value) {
-        removeIfPresent(value);
-        roomUsers.put(publicKey, value);
-        return roomUsers.put(publicKey, value);
-    }
-
-    public void removeIfPresent(User user) {
-        Optional<Map.Entry<PublicKey,User>> setToReplace = roomUsers.entrySet().stream().filter(publicKeyUserEntry ->
-                publicKeyUserEntry.getValue().equals(user)).findFirst();
-        if(setToReplace.isPresent()){
-            roomUsers.remove(setToReplace.get().getKey());
+    private int indexOfUserInChatters(User user) {
+        for (Chatter chatter: chatters) {
+            if (chatter.getUser().toString().equals(user.toString())){
+                return chatters.indexOf(chatter);
+            }
         }
-
+        return -1;
     }
 
-    public User remove(Object key) {
-        return roomUsers.remove(key);
+    public void addChatter(User user, String publicKey) {
+        if (indexOfPublicKeyInChatters(publicKey) > -1) {
+            chatters.set(indexOfPublicKeyInChatters(publicKey), new Chatter(user, publicKey));
+        }
+        chatters.add(new Chatter(user, publicKey));
+    }
+
+    public List<Chatter> getUsers() {
+        return chatters;
     }
 
     public String getId() {
@@ -98,11 +89,4 @@ public class ChatRoom {
         this.name = name;
     }
 
-    public Map<PublicKey, User> getRoomUsers() {
-        return roomUsers;
-    }
-
-    public void setRoomUsers(Map<PublicKey, User> roomUsers) {
-        this.roomUsers = roomUsers;
-    }
 }

@@ -1,6 +1,6 @@
 package se.secure.foliechatt.domain;
 
-import se.secure.foliechatt.encryption.PublicKey;
+import se.secure.foliechatt.security.encryption.PublicKey;
 
 public class Message {
 

@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.secure.foliechatt.domain.LoginAttempt;
-import se.secure.foliechatt.domain.LoginResponse;
-import se.secure.foliechatt.domain.User;
+import se.secure.foliechatt.domain.*;
 import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.services.UserService;
 
@@ -32,9 +30,29 @@ public class LoginController {
             return ResponseEntity.status(401).body("Wrong username/password");
         }
 
-        String sessionToken = userService.getUniqueSessionToken(user);
-        userService.addUserAsLoggedIn(user, sessionToken);
+        LoggedInUser loggedInUser = userService.addUserAsLoggedIn(user);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(user, sessionToken));
+        LoginResponse loginResponse = new LoginResponse(loggedInUser.getUser(), loggedInUser.getSessionToken());
+
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
+
+//    @CrossOrigin
+//    @RequestMapping(method = RequestMethod.POST)
+//    public ResponseEntity logout(@RequestHeader(name="sessionToken", required = true) String sessionToken) throws InvalidKeySpecException, NoSuchAlgorithmException {
+//
+//
+//
+//        User user ;
+//
+//        try {
+//        } catch (InvalidLoginException e) {
+//            return ResponseEntity.status(401).body("Wrong username/password");
+//        }
+//
+//        String sessionToken = userService.getUniqueSessionToken(user);
+//        userService.addUserAsLoggedIn(user, sessionToken);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(user, sessionToken));
+//    }
 }

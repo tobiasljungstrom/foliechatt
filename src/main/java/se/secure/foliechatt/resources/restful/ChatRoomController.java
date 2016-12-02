@@ -6,14 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.secure.foliechatt.chat.ChatRoomManager;
 import se.secure.foliechatt.domain.ChatRoom;
+
 import se.secure.foliechatt.domain.User;
-import se.secure.foliechatt.domain.Chatter;
-import se.secure.foliechatt.encryption.PublicKey;
+import se.secure.foliechatt.domain.UserManager;
 import se.secure.foliechatt.services.ChatRoomService;
 import se.secure.foliechatt.services.UserService;
 
-import java.util.List;
-import java.util.Optional;
+
+import static se.secure.foliechatt.chat.ChatRoomManager.chatRoomExist;
+import static se.secure.foliechatt.chat.ChatRoomManager.getChatRoomById;
+
 
 @RestController
 @CrossOrigin
@@ -26,23 +28,23 @@ public class ChatRoomController {
     UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createChatRoom(@RequestHeader(name = "sessionToken", required = true) String sessionToken ,@RequestBody String publicKey) {
-
-        Optional<User> maybeUser = userService.getUserBySessionToken(sessionToken);
-
-        if(! maybeUser.isPresent()) {
+    public ResponseEntity createChatRoom(@RequestHeader(name = "sessionToken", required = true) String sessionToken , @RequestBody String publicKey) {
+        User user = UserManager.getUserBySessionToken(sessionToken);
+        if(user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        User user = maybeUser.get();
-        ChatRoom chatRoom = new ChatRoom(user, new PublicKey(publicKey));
-        ChatRoomManager.getInstance().addChatRoom(chatRoom);
+        ChatRoom chatRoom = new ChatRoom(user, publicKey);
 
-        //TODO REMOVE
-        for (int i = 0; i < chatRoom.getUsers().size(); i++ ){
-            System.out.println(chatRoom.getUsers().get(i).getUserAlias());
-        }
-
+//        int i = 0;
+//        while (chatRoomExist(chatRoom.getId())) {
+//            i++;
+//            chatRoom = new ChatRoom(user, publicKey);
+//            if (i > 2) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//            }
+//        }
+        ChatRoomManager.addChatRoom(chatRoom);
 
         return ResponseEntity.ok(chatRoom);
     }
@@ -50,20 +52,17 @@ public class ChatRoomController {
 
     @RequestMapping(value = "/{roomId}", method = RequestMethod.POST)
     public ResponseEntity joinChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String publicKey) {
-
-        Optional<User> maybeUser = userService.getUserBySessionToken(sessionToken);
-        Optional<ChatRoom> chatRoom = ChatRoomManager.getInstance().getChatRoomById(roomId);
-
-        if(!maybeUser.isPresent()) {
+        User user = UserManager.getUserBySessionToken(sessionToken);
+        if(user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(!chatRoom.isPresent()) {
+        ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomId);
+
+        if(chatRoom == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        List<Chatter> users =  chatRoomService.addUserToRoom(new PublicKey(publicKey), maybeUser.get(), roomId);
-
-
-        return ResponseEntity.ok(chatRoom.get());
+        chatRoomService.newChatterInRoom(user, publicKey, roomId);
+        return ResponseEntity.ok(chatRoom);
     }
 }

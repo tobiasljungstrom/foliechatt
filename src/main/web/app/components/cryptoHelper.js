@@ -14,7 +14,6 @@ var CryptoHelper = function CryptoHelper() {
         };
 
         return openpgp.generateKey(options).then(function (key) {
-            console.log("generated key pair: ", key)
             self.privateKey = key.privateKeyArmored;
             self.publicKey = key.publicKeyArmored;
             console.log("keys are ready to use");

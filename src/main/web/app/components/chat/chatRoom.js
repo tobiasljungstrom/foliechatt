@@ -7,7 +7,7 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
-        baseUrl: React.PropTypes.object.isRequired,
+        baseUrl: React.PropTypes.string.isRequired,
         loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
@@ -17,7 +17,12 @@ var ChatRoom = React.createClass({
     },
 
     sendMessage: function() {
-        const content = document.getElementById('messageInput' + this.props.roomId).value;
+        const inputId = 'messageInput' + this.props.roomId;
+        const inputElement = document.getElementById(inputId);
+        const content = inputElement.value;
+        inputElement.value = '';
+        inputElement.focus();
+
         console.log("trying to send: ", content);
         const users = this.props.users;
 
@@ -43,17 +48,13 @@ var ChatRoom = React.createClass({
     },
 
     componentWillMount: function() {
-        const publicKey = this.props.cryptoHelper.publicKey;
-        const updateChat = this.props.updateChat;
-        const updateUsers = this.props.updateUsers;
-        const roomId = this.props.roomId;
-        const loggedInUser = this.props.loggedInUser;
-        const decryptWithSenderKey = this.props.cryptoHelper.decryptWithSenderKey;
+        const {publicKey,decryptWithSenderKey} = this.props.cryptoHelper;
+        const {updateChat,updateUsers,roomId,loggedInUser} = this.props;
 
         let socket = new SockJS(`${this.props.baseUrl}folieSocket`);
 
         stompClient = Stomp.over(socket);
-        // stompClient.debug = null;
+        stompClient.debug = null;
 
         stompClient.connect({}, function() {
 
@@ -78,12 +79,16 @@ var ChatRoom = React.createClass({
         var renderMessages = [];
         var usersInRoom= [];
 
-        for (let i = 0; i < this.props.messages.length; i++) {
-            renderMessages[i] = <ChatMessage userName={this.props.messages[i].user} messageText={this.props.messages[i].message} key={i}/>;
+        const {messages, roomId, users} = this.props;
+
+        for (let i = 0; i < messages.length; i++) {
+            let isLast = i == messages.length -1;
+            let uniqueNodeId = roomId + '' + i;
+            renderMessages[i] = <ChatMessage userName={messages[i].user} messageText={messages[i].message} key={i} shouldBaffle={ isLast } nodeId={ uniqueNodeId }/>;
         }
 
-        for (let i = 0; i < this.props.users.length; i++) {
-            usersInRoom[i] = <li key={i}>{this.props.users[i].userAlias}</li>;
+        for (let i = 0; i < users.length; i++) {
+            usersInRoom[i] = <li key={i}>{users[i].userAlias}</li>;
         }
 
         return (
@@ -94,10 +99,10 @@ var ChatRoom = React.createClass({
                 </ul>
 
                 Chat:
-                <ul>
+                <ul className="chatRoomMessageSpace">
                     {renderMessages}
                 </ul>
-                <input type="text" id={"messageInput" + this.props.roomId}/>
+                <input type="text" id={"messageInput" + roomId}/>
                 <button onClick={this.sendMessage}>Send!</button>
             </div>
         );

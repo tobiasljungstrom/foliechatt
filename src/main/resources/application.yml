@@ -27,7 +27,7 @@ spring:
 
 server:
   context-path: /foliechatt
-  port: 9876
+#  port: 8843
 
 logging:
   level:

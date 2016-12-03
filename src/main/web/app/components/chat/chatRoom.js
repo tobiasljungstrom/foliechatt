@@ -7,7 +7,7 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
-        baseUrl: React.PropTypes.object.isRequired,
+        baseUrl: React.PropTypes.string.isRequired,
         loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
@@ -18,20 +18,20 @@ var ChatRoom = React.createClass({
 
     sendMessage: function() {
         const content = document.getElementById('messageInput' + this.props.roomId).value;
-        console.log("trying to send: ", content);
         const users = this.props.users;
 
-        users.forEach( ({publicKey, userAlias}) => {
+        users.forEach(({publicKey, userAlias}) => {
             this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias));
         });
+        document.getElementById('messageInput' + this.props.roomId).value = '';
     },
 
-    dispatchMessage: function (userAlias, encryptedMessage) {
+    dispatchMessage: function(userAlias, encryptedMessage) {
         console.log("sending to user alias: ", userAlias);
         let roomId = this.props.roomId;
         let senderPublicKey = this.props.cryptoHelper.publicKey;
 
-        stompClient.send(`/app/hello/${roomId}` , {}, JSON.stringify({
+        stompClient.send(`/app/hello/${roomId}`, {}, JSON.stringify({
             content: encryptedMessage.data,
             sender: {
                 value: senderPublicKey
@@ -61,21 +61,31 @@ var ChatRoom = React.createClass({
                 let content = messageBody.content;
                 let user = messageBody.sender.value;
 
-                decryptWithSenderKey(messageBody.sender.value)(content).then( function(decryptedMessage) {
+                decryptWithSenderKey(messageBody.sender.value)(content).then(function(decryptedMessage) {
                     updateChat(decryptedMessage.data, user, roomId);
                 });
             });
 
-            stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom){
+            stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom) {
                 let users = JSON.parse(usersInRoom.body);
                 updateUsers(users, roomId);
             });
         });
     },
 
+    componentDidMount: function() {
+        const sendMessage = this.sendMessage;
+        document.getElementById('messageInput' + this.props.roomId).addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode == 13) {
+                sendMessage();
+            }
+        });
+    },
+
     render: function() {
         var renderMessages = [];
-        var usersInRoom= [];
+        var usersInRoom = [];
 
         for (let i = 0; i < this.props.messages.length; i++) {
             renderMessages[i] = <ChatMessage userName={this.props.messages[i].user} messageText={this.props.messages[i].message} key={i}/>;
@@ -92,8 +102,7 @@ var ChatRoom = React.createClass({
                         <div className="chatBox">
                             <h3>Room ID: {this.props.roomId}</h3>
                             <ul className="list">
-                                <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/>
-                                {renderMessages}
+                                <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
                             </ul>
                         </div>
                     </div>

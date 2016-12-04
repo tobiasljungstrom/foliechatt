@@ -17,11 +17,14 @@ var ChatRoom = React.createClass({
     },
 
     sendMessage: function() {
-        const {roomId, users} = this.props;
+        const {roomId, users, cryptoHelper} = this.props;
         const content = document.getElementById('messageInput' + roomId).value;
 
         users.forEach(({publicKey, userAlias}) => {
-            this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias));
+            cryptoHelper.encrypt(content, publicKey)
+                .then( encryptedMessage => {
+                    this.dispatchMessage(userAlias, encryptedMessage);
+                });
         });
         document.getElementById('messageInput' + roomId).value = '';
     },
@@ -59,9 +62,10 @@ var ChatRoom = React.createClass({
                 let content = messageBody.content;
                 let user = messageBody.sender.value;
 
-                decryptWithSenderKey(messageBody.sender.value)(content).then(function(decryptedMessage) {
-                    updateChat(decryptedMessage.data, user, roomId);
-                });
+                decryptWithSenderKey(content, messageBody.sender.value)
+                    .then( decryptedMessage =>  {
+                        updateChat(decryptedMessage.data, user, roomId);
+                    });
             });
 
             stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom) {

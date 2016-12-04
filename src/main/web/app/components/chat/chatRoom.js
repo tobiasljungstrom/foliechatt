@@ -17,13 +17,13 @@ var ChatRoom = React.createClass({
     },
 
     sendMessage: function() {
-        const content = document.getElementById('messageInput' + this.props.roomId).value;
-        const users = this.props.users;
+        const {roomId, users} = this.props;
+        const content = document.getElementById('messageInput' + roomId).value;
 
         users.forEach(({publicKey, userAlias}) => {
             this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias));
         });
-        document.getElementById('messageInput' + this.props.roomId).value = '';
+        document.getElementById('messageInput' + roomId).value = '';
     },
 
     dispatchMessage: function(userAlias, encryptedMessage) {
@@ -43,13 +43,11 @@ var ChatRoom = React.createClass({
     },
 
     componentWillMount: function() {
-        const updateChat = this.props.updateChat;
-        const updateUsers = this.props.updateUsers;
-        const roomId = this.props.roomId;
-        const loggedInUser = this.props.loggedInUser;
+        const {updateChat, updateUsers, roomId, loggedInUser, baseUrl} = this.props;
+
         const decryptWithSenderKey = this.props.cryptoHelper.decryptWithSenderKey;
 
-        let socket = new SockJS(`${this.props.baseUrl}folieSocket`);
+        let socket = new SockJS(`${baseUrl}folieSocket`);
 
         stompClient = Stomp.over(socket);
         // stompClient.debug = null;
@@ -84,15 +82,18 @@ var ChatRoom = React.createClass({
     },
 
     render: function() {
+        const {messages, users, roomId} = this.props;
         var renderMessages = [];
         var usersInRoom = [];
 
-        for (let i = 0; i < this.props.messages.length; i++) {
-            renderMessages[i] = <ChatMessage userName={this.props.messages[i].user} messageText={this.props.messages[i].message} key={i}/>;
+        for (let i = 0; i < messages.length; i++) {
+            let isLastMessage = i == messages.length -1;
+            let uniqueNodeId = 'msgId' + Math.random();
+            renderMessages[i] = <ChatMessage userName={messages[i].user} messageText={messages[i].message} key={i} shouldBaffle={isLastMessage} nodeId={uniqueNodeId}/>;
         }
 
-        for (let i = 0; i < this.props.users.length; i++) {
-            usersInRoom[i] = <li key={i}>{this.props.users[i].userAlias}</li>;
+        for (let i = 0; i < users.length; i++) {
+            usersInRoom[i] = <li key={i}>{users[i].userAlias}</li>;
         }
 
         return (
@@ -100,7 +101,7 @@ var ChatRoom = React.createClass({
                 <div className="row">
                     <div className="col-md-9">
                         <div className="chatBox">
-                            <h3>Room ID: {this.props.roomId}</h3>
+                            <h3>Room ID: {roomId}</h3>
                             <ul className="list">
                                 <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
                             </ul>
@@ -115,7 +116,7 @@ var ChatRoom = React.createClass({
                         </div>
                     </div>
                 </div>
-                <input type="text" id={"messageInput" + this.props.roomId} placeholder="Type message"/>
+                <input type="text" id={"messageInput" + roomId} placeholder="Type message"/>
                 <div className="btn btn-default sendButton" onClick={this.sendMessage}>Send</div>
             </div>
         );

@@ -13,6 +13,7 @@ var ChatRoom = React.createClass({
         messages: React.PropTypes.array.isRequired,
         updateChat: React.PropTypes.func.isRequired,
         cryptoHelper: React.PropTypes.object.isRequired,
+        leaveChatRoom: React.PropTypes.func.isRequired,
         roomId: React.PropTypes.string.isRequired
     },
 
@@ -43,6 +44,26 @@ var ChatRoom = React.createClass({
                 value: userAlias
             }
         }));
+    },
+
+    leaveChatRoom: function() {
+        const leaveChatRoom = this.props.leaveChatRoom;
+
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //Callback triggers on success
+            if (this.readyState == 4 && this.status == 200) {
+                leaveChatRoom(this.props.roomId);
+                console.log('Left chatroom with id '+roomId);
+            } else if(this.readyState == 4 && this.status == 401) {
+                console.log('UNATHORIZED');
+            }
+
+        };
+        request.open('POST', `${this.props.baseUrl}api/v.1/${this.props.roomId}/leave`, true);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send();
+
     },
 
     componentWillMount: function() {
@@ -105,7 +126,7 @@ var ChatRoom = React.createClass({
                 <div className="row">
                     <div className="col-md-9">
                         <div className="chatBox">
-                            <h3>Room ID: {roomId}</h3>
+                            <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveChatRoom}>Leave</button>
                             <ul className="list">
                                 <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
                             </ul>

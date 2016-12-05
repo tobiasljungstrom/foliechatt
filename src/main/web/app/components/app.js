@@ -32,6 +32,13 @@ var App = React.createClass({
         this.setState({roomList: roomList});
     },
 
+    leaveChatRoom: function(roomId) {
+        let roomList = this.state.roomList;
+        let roomIndex = findRoomById(roomId);
+        roomList.splice(roomIndex, 1);
+        this.setState({roomList: roomList});
+    },
+
     updateChat: function(message, key, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
@@ -108,6 +115,7 @@ var App = React.createClass({
                     users={this.state.roomList[index].users}
                     roomId={this.state.roomList[index].roomId}
                     cryptoHelper={this.state.roomList[index].cryptoHelper}
+                    leaveChatRoom={this.leaveChatRoom}
                     updateChat={this.updateChat}
                     updateUsers={this.updateUsers}/>;
             });

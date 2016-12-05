@@ -56,4 +56,21 @@ public class ChatRoomController {
         chatRoomService.newChatterInRoom(user, publicKey, roomId);
         return ResponseEntity.ok(chatRoom);
     }
+
+    @RequestMapping(value = "/{roomId}/leave", method = RequestMethod.POST)
+    public ResponseEntity leaveChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String publicKey) {
+        User user = UserManager.getUserBySessionToken(sessionToken);
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to leave a chat room");
+        }
+        ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomId);
+
+        if(chatRoom == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The requested chat room <" + roomId + "> does not exist");
+        }
+
+        chatRoomService.leaveChatroom(user, roomId);
+        return ResponseEntity.ok(chatRoom);
+    }
+
 }

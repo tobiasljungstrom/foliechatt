@@ -28,4 +28,12 @@ public class ChatRoomService {
 
     }
 
+    public void leaveChatroom(User user, String roomId) {
+        ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomId);
+        chatRoom.removeChatter(user);
+        List<Chatter> chatters = chatRoom.getUsers();
+        simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomId + "/status", chatters);
+
+    }
+
 }

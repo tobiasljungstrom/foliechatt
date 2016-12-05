@@ -89,4 +89,10 @@ public class ChatRoom {
         this.name = name;
     }
 
+    public void removeChatter(User user) {
+        if(indexOfUserInChatters(user) > -1 ) {
+            chatters.remove(indexOfUserInChatters(user));
+        }
+
+    }
 }

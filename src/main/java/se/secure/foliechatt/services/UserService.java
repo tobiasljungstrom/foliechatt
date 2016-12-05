@@ -8,6 +8,7 @@ import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.persistence.UserRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.security.NoSuchAlgorithmException;

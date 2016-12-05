@@ -1,39 +1,33 @@
 var React = require('react');
 let baffle = require('baffle');
-const CHARACTER_SET = 'abcdeABCDE⏈ᖈᛤḕԽ₮⅃₾';
+const CHARACTER_SET = '0123456789+*<>Zフモムヌマコオヿ'; //Enter the Matrix!
 const baffleOptions = {
     characters: CHARACTER_SET,
-    speed: 30
+    speed: 50
 };
-
-function baffleMessageNode(id, text) {
-    let node = document.getElementById(id);
-    let b = baffle(node, baffleOptions).start();
-    b.text(currentText => text).reveal(5000);
-}
 
 var ChatMessage = React.createClass({
     propTypes: {
         userName: React.PropTypes.string,
         messageText: React.PropTypes.string,
-        shouldBaffle: React.PropTypes.bool,
         nodeId: React.PropTypes.string
     },
 
     componentDidMount: function() {
-        const {nodeId, messageText, shouldBaffle} = this.props;
-        if(shouldBaffle) {
-            baffleMessageNode(nodeId, messageText);
-        }
+        const nodeId = this.props.nodeId;
+        let b = baffle(document.getElementById(nodeId), baffleOptions).start();
+        setTimeout(function(){
+            b.reveal(500);
+        }, 500);
+
     },
 
     render: function() {
-        const {nodeId, userName, shouldBaffle, messageText} = this.props;
-        let message = shouldBaffle ? '' : messageText;
+        const {nodeId, userName} = this.props;
         return (
             <li className="chatMessage">
                 <span className="userName">{userName}: </span>
-                <span className="messageText" id={nodeId}>{message}</span>
+                <span className="messageText" id={nodeId}>{this.props.messageText}</span>
             </li>
         );
     }

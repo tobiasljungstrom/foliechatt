@@ -33,19 +33,13 @@ var CryptoHelper = function CryptoHelper() {
         return openpgp.encrypt(options); // returns a promise.. pass callback to receive encrypted Message, this.encrypt.then( (encryptedMessage) => ?? do stuff )
     };
 
-    this.decryptWithSenderKey = function(publicSenderKey) {
-        // return a function taking just the message as an arg, with the key variables bound. (good for chaining. see testEncryptAndDecryptMessage)
-        return (function decryptMessage(message) {
-            /*console.log("decrypting with senden key:", publicSenderKey)
-            console.log("decr with receiver private key: ", self.privateKey)*/
-            let options = {
-                message: openpgp.message.readArmored(message),     // parse armored message
-                publicKeys: openpgp.key.readArmored(publicSenderKey).keys,    // for verification (optional)
-                privateKey: openpgp.key.readArmored(self.privateKey).keys[0] // for decryption
-            };
-
-            return openpgp.decrypt(options); // returns a promise.. pass callback to receive encrypted Message, this.decrypt.then( (decryptedMessage) => ?? do stuff )
-        });
+    this.decryptWithSenderKey = function(message, publicSenderKey) {
+        let options = {
+            message: openpgp.message.readArmored(message),     // parse armored message
+            publicKeys: openpgp.key.readArmored(publicSenderKey).keys,    // for verification (optional)
+            privateKey: openpgp.key.readArmored(self.privateKey).keys[0] // for decryption
+        };
+        return openpgp.decrypt(options); // returns a promise.. pass callback to receive encrypted Message, this.decrypt.then( (decryptedMessage) => ?? do stuff )
     };
 
     this.publicKeyPromise = function() {

@@ -8,6 +8,7 @@ import se.secure.foliechatt.domain.*;
 import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.services.UserService;
 
+import javax.persistence.NoResultException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -21,12 +22,12 @@ public class LoginController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) {
 
         User user;
         try {
             user = userService.authenticateUser(loginAttempt);
-        } catch (InvalidLoginException e) {
+        } catch (InvalidLoginException | NoResultException e) {
             return ResponseEntity.status(401).body("Wrong username/password");
         }
 

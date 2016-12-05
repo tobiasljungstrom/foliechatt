@@ -4,7 +4,9 @@ var NewUser = require('./newUser');
 var LogIn = require('./logIn');
 var ChatRoom = require('./chat/chatRoom');
 var ChatRoomDialog = require('./chat/chatRoomDialog');
-// var CryptoTest = require('./cryptoTest');
+var Greeting = require('./greeting');
+
+require('../css/main.scss');
 
 var App = React.createClass({
     getInitialState: function() {
@@ -82,14 +84,18 @@ var App = React.createClass({
 
     render: function() {
 
-        let loginOrLoginStatus = null;
+        let login = null;
+        let newUser = null;
         let chatRooms = [];
-        if (this.state.sessionToken) {
-            loginOrLoginStatus = <p>You are logged in as {this.state.loggedInUser.alias}</p>;
+        let chatRoomDialog = null;
+        let greeting = null;
 
-
+        if (!this.state.sessionToken) {
+            login = <LogIn baseUrl={this.state.baseUrl} setLoggedInUser={ this.setLoggedInUser } setSessionToken={this.setSessionToken}/>;
+            newUser = <NewUser baseUrl={this.state.baseUrl}/>;
         } else {
-            loginOrLoginStatus = <LogIn baseUrl={this.state.baseUrl} setLoggedInUser={ this.setLoggedInUser } setSessionToken={this.setSessionToken}/>;
+            chatRoomDialog = <ChatRoomDialog sessionToken={this.state.sessionToken} createChatRoom={this.createChatRoom} baseUrl={this.state.baseUrl}/>;
+            greeting = <Greeting userName={this.state.loggedInUser.alias}/>;
         }
 
         if(this.state.roomList.length>0){
@@ -103,18 +109,36 @@ var App = React.createClass({
                     roomId={this.state.roomList[index].roomId}
                     cryptoHelper={this.state.roomList[index].cryptoHelper}
                     updateChat={this.updateChat}
-                    updateUsers={this.updateUsers}/>
+                    updateUsers={this.updateUsers}/>;
             });
         }
 
 
 
         return (
-            <div>
-                <NewUser baseUrl={this.state.baseUrl}/>
-                {loginOrLoginStatus}
+            <div className='container'>
+                <div className="nav">
+                    <h1>Foliechatt_</h1>
+                </div>
+                <div className="row">
+                    <div className="col-md-6">
+                        {login}
+                    </div>
+                    <div className="col-md-6">
+                        {newUser}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-2"></div>
+                    <div className="col-md-8">
+                        {greeting}
+                        {chatRoomDialog}
+                    </div>
+                    <div className="col-md-2"></div>
+
+                </div>
                 {chatRooms}
-                <ChatRoomDialog baseUrl={this.state.baseUrl} sessionToken={this.state.sessionToken} createChatRoom={this.createChatRoom}/>
+
                 {/* <CryptoTest/> */}
             </div>
         );

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.secure.foliechatt.chat.ChatRoomManager;
 import se.secure.foliechatt.domain.ChatRoom;
-
 import se.secure.foliechatt.domain.User;
 import se.secure.foliechatt.domain.UserManager;
 import se.secure.foliechatt.services.ChatRoomService;
@@ -31,19 +30,11 @@ public class ChatRoomController {
     public ResponseEntity createChatRoom(@RequestHeader(name = "sessionToken", required = true) String sessionToken , @RequestBody String publicKey) {
         User user = UserManager.getUserBySessionToken(sessionToken);
         if(user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to create a chat room");
         }
 
         ChatRoom chatRoom = new ChatRoom(user, publicKey);
 
-//        int i = 0;
-//        while (chatRoomExist(chatRoom.getId())) {
-//            i++;
-//            chatRoom = new ChatRoom(user, publicKey);
-//            if (i > 2) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//            }
-//        }
         ChatRoomManager.addChatRoom(chatRoom);
 
         return ResponseEntity.ok(chatRoom);
@@ -54,12 +45,12 @@ public class ChatRoomController {
     public ResponseEntity joinChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String publicKey) {
         User user = UserManager.getUserBySessionToken(sessionToken);
         if(user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to join a chat room");
         }
         ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomId);
 
         if(chatRoom == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The requested chat room <" + roomId + "> does not exist");
         }
 
         chatRoomService.newChatterInRoom(user, publicKey, roomId);

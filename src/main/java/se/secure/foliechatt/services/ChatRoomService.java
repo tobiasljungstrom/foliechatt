@@ -13,7 +13,7 @@ import java.util.*;
 public class ChatRoomService {
 
     @Autowired
-    SimpMessagingTemplate simpMessagingTemplate;
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     public List<Chatter> newChatterInRoom(User user, String publicKey, String roomId) {
 

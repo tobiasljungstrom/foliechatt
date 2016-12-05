@@ -1,0 +1,125 @@
+$color1: #da412d;
+$color2: #692809;
+$color3: #250a04;
+$contrast1: #2c6c22;
+$light: #fafafa;
+$dark: #181818;
+$base-margin: 1rem;
+$base-border: 1px solid $color2;
+$base-rounding: 2px;
+
+body {
+    font: {
+        family: Inconsolata, monospace;
+        size: 100%;
+    }
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+.chatRoom,
+.chatRoomDialog,
+form {
+    border: $base-border;
+    border-radius: $base-rounding;
+    background-color: $light;
+    color: $dark;
+    padding: $base-margin;
+    margin-bottom: $base-margin;
+
+    .formTitle {
+        font-size: 120%;
+        color: grey;
+        margin-bottom: 1rem;
+    }
+
+    table tbody tr td {
+        padding: $base-margin*0.3;
+    }
+}
+
+input {
+    padding: $base-margin*0.3;
+}
+
+.nav {
+    background-color: $color1;
+    border-radius: $base-rounding;
+    color: $light;
+    padding: 1rem;
+    margin-bottom: $base-margin;
+    margin-top: $base-margin*0.5;
+}
+
+.greeting {
+    text-align: center;
+    margin-bottom: $base-margin;
+}
+
+.chatRoomDialog {
+    position: relative;
+    overflow: hidden;
+}
+
+.joinChatRoom {
+    position: relative;
+    float: left;
+}
+
+.joinRoomButton {
+    margin-left: $base-margin*0.5;
+}
+
+.newChatRoom {
+    position: relative;
+    float: right;
+}
+
+.chatRoom {
+    position: relative;
+    overflow: hidden;
+
+    input {
+        width: 74%;
+        margin: $base-margin 0;
+    }
+
+    .sendButton {
+        margin: $base-margin;
+    }
+}
+
+.chatMessage {
+    margin-bottom: $base-margin*0.2;
+}
+
+.userName {
+    font-weight: bold;
+}
+
+.list {
+    list-style-type: none;
+}
+
+.userList {
+    font-weight: bold;
+    padding: 0 $base-margin*0.5;
+    ul li {
+        margin-bottom: $base-margin*0.5;
+    }
+}
+
+.userList h3, .chatBox h3 {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: $base-margin*0.5;
+    border-bottom: $base-border;
+}
+@import './reset.css';
+@import url( 'https://fonts.googleapis.com/css?family=Inconsolata');

@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 
 @Entity
-@NamedQueries(
-        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
-)
+@NamedQueries({
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findByAlias", query = "SELECT u FROM User u WHERE u.alias = :alias")
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

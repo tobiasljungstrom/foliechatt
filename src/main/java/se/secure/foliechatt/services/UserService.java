@@ -8,6 +8,7 @@ import se.secure.foliechatt.exceptions.InvalidLoginException;
 import se.secure.foliechatt.persistence.UserRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.security.NoSuchAlgorithmException;
@@ -40,16 +41,13 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-
         Password password = null;
         try {
             password = Hasher.GenerateHash(user.getPassword());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
-
         user.setFullPassword(password);
-
         return repo.save(user);
     }
 
@@ -68,23 +66,39 @@ public class UserService {
     public User authenticateUser(LoginAttempt loginAttempt) throws NoResultException, InvalidLoginException {
         TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", loginAttempt.getEmail());
-
         User result = query.getSingleResult();
-
         boolean passwordIsValid = false;
-
         try {
             passwordIsValid = Hasher.validateHash(loginAttempt.getPassword(), result.getPassword(), result.getSalt(), result.getIterations());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
-
         if(passwordIsValid){
             return result;
         }
-
         throw new InvalidLoginException("Wrong password");
+    }
 
+    public boolean userWithAliasExists(User user) throws NoResultException {
+        try {
+            TypedQuery<User> query = em.createNamedQuery("User.findByAlias", User.class);
+            query.setParameter("alias", user.getAlias());
+            User result = query.getSingleResult();
+        }   catch (NoResultException e){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean userWithEmailExists(User user) throws NoResultException {
+        try {
+            TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
+            query.setParameter("email", user.getEmail());
+            User result = query.getSingleResult();
+        }   catch (NoResultException e){
+            return false;
+        }
+        return true;
     }
 
     public boolean isAuthorizedForLogin(LoginAttempt loginAttempt) {

@@ -31,7 +31,16 @@ public class UserController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity createUser(@RequestBody User user) {
+        boolean emailExist = userService.userWithEmailExists(user);
+        boolean aliasExist = userService.userWithAliasExists(user);
+        if (emailExist && aliasExist){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email and alias taken!");
+        } else if (aliasExist){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Alias taken!");
+        } else if(emailExist){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email taken!");
+        }
         return ResponseEntity.ok(userService.saveUser(user));
     }
 

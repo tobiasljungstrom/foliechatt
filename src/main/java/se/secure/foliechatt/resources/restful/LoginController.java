@@ -14,14 +14,14 @@ import java.security.spec.InvalidKeySpecException;
 
 
 @RestController
-@RequestMapping(value = "/api/v.1/login")
+@RequestMapping(value = "/api/v.1")
 public class LoginController {
 
     @Autowired
     private UserService userService;
 
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity login(@RequestBody LoginAttempt loginAttempt) {
 
         User user;
@@ -38,22 +38,16 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
-//    @CrossOrigin
-//    @RequestMapping(method = RequestMethod.POST)
-//    public ResponseEntity logout(@RequestHeader(name="sessionToken", required = true) String sessionToken) throws InvalidKeySpecException, NoSuchAlgorithmException {
-//
-//
-//
-//        User user ;
-//
-//        try {
-//        } catch (InvalidLoginException e) {
-//            return ResponseEntity.status(401).body("Wrong username/password");
-//        }
-//
-//        String sessionToken = userService.getUniqueSessionToken(user);
-//        userService.addUserAsLoggedIn(user, sessionToken);
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(user, sessionToken));
-//    }
+    @CrossOrigin
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity logout(@RequestHeader(name="sessionToken", required = true) String sessionToken){
+        User user = UserManager.getUserBySessionToken(sessionToken);
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to log out");
+        }
+        if (UserManager.removeLoggedInUser(user)){
+            return ResponseEntity.ok().body("user logged out");
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Logout failed!");
+    }
 }

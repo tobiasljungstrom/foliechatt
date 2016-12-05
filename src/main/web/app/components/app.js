@@ -23,11 +23,26 @@ var App = React.createClass({
         };
     },
     logOut: function() {
-        //TODO: do rest logout
+        const setState = this.setState.bind(this);
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //Callback triggers on success
+            if (this.readyState == 4 && this.status == 200) {
+                Cookies.remove(COOKIE_LOGGED_IN_USER);
+                Cookies.remove(COOKIE_SESSION_TOKEN);
+                setState( {sessionToken : null, roomList : []} );
 
-        Cookies.remove(COOKIE_LOGGED_IN_USER);
-        Cookies.remove(COOKIE_SESSION_TOKEN);
-        this.setState( {sessionToken : null} );
+                //console.log('LOG IN IS GOOD');
+            } else if(this.readyState == 4) {
+                console.log('UNATHORIZED');
+            }
+
+        };
+        request.open('POST', `${this.state.baseUrl}api/v.1/logout`, true);
+        request.setRequestHeader('sessionToken', this.state.sessionToken);
+        request.send();
+
+
     },
     setSessionToken: function(sessionToken) {
         console.log("setting sessionToken", sessionToken);
@@ -113,7 +128,7 @@ var App = React.createClass({
             greeting = <Greeting userName={this.state.loggedInUser.alias}/>;
         }
 
-        if(this.state.roomList.length>0){
+        if(this.state.roomList.length>0 && this.state.sessionToken){
             this.state.roomList.forEach( (room, index) => {
                 chatRooms[index] = <ChatRoom
                     key={index}

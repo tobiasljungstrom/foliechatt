@@ -42,6 +42,15 @@ public final class UserManager {
         return -1;
     }
 
+    public static Boolean removeLoggedInUser (User user){
+        int userIndex = indexOfLoggedInUser(user);
+        if (userIndex > -1){
+            loggedInUsers.remove(userIndex);
+            return true;
+        }
+        return false;
+    }
+
     public static void setLoggedInUser(int userIndex, LoggedInUser loggedInUser) {
         loggedInUsers.set(userIndex, loggedInUser);
     }

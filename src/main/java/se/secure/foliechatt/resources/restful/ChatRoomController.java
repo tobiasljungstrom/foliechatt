@@ -58,7 +58,7 @@ public class ChatRoomController {
     }
 
     @RequestMapping(value = "/{roomId}/leave", method = RequestMethod.POST)
-    public ResponseEntity leaveChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String publicKey) {
+    public ResponseEntity leaveChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String body) {
         User user = UserManager.getUserBySessionToken(sessionToken);
         if(user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to leave a chat room");

@@ -7,6 +7,7 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
+        sessionToken: React.PropTypes.string,
         baseUrl: React.PropTypes.string.isRequired,
         loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
@@ -46,7 +47,9 @@ var ChatRoom = React.createClass({
         }));
     },
 
-    leaveChatRoom: function() {
+    leaveRoom: function() {
+        console.log("In leavechatroom");
+        console.log(this.props.sessionToken);
         const leaveChatRoom = this.props.leaveChatRoom;
 
         const request = new XMLHttpRequest();
@@ -60,8 +63,10 @@ var ChatRoom = React.createClass({
             }
 
         };
-        request.open('POST', `${this.props.baseUrl}api/v.1/${this.props.roomId}/leave`, true);
-        request.setRequestHeader('Content-Type', 'application/json');
+        console.log("HELLO!");
+        request.open('POST', `${this.props.baseUrl}api/v.1/chatroom/${this.props.roomId}/leave`, true);
+        request.setRequestHeader('Content-Type', 'text/plain');
+        request.setRequestHeader('sessionToken', this.props.sessionToken);
         request.send();
 
     },
@@ -126,7 +131,7 @@ var ChatRoom = React.createClass({
                 <div className="row">
                     <div className="col-md-9">
                         <div className="chatBox">
-                            <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveChatRoom}>Leave</button>
+                            <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveRoom}>Leave</button>
                             <ul className="list">
                                 <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
                             </ul>

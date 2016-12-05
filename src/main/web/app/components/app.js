@@ -109,6 +109,7 @@ var App = React.createClass({
             this.state.roomList.forEach( (room, index) => {
                 chatRooms[index] = <ChatRoom
                     key={index}
+                    sessionToken={this.state.sessionToken}
                     baseUrl={this.state.baseUrl}
                     loggedInUser={this.state.loggedInUser}
                     messages={this.state.roomList[index].messages}

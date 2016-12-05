@@ -1,35 +1,50 @@
 var React = require('react');
+var Cookies = require('js-cookie');
 
 var NewUser = require('./newUser');
 var LogIn = require('./logIn');
 var ChatRoom = require('./chat/chatRoom');
 var ChatRoomDialog = require('./chat/chatRoomDialog');
 var Greeting = require('./greeting');
+const COOKIE_SESSION_TOKEN ='sessionToken';
+const COOKIE_LOGGED_IN_USER = 'loggedInUser';
+const EXPIRES_OPT = { expires: 1 / 288 };
 
 require('../css/main.scss');
 
 var App = React.createClass({
     getInitialState: function() {
+        let maybeLoggedInUser = Cookies.get(COOKIE_LOGGED_IN_USER);
+        console.log("maybeLoggedINuser is:", maybeLoggedInUser);
         return {
-            sessionToken: null,
+            sessionToken: Cookies.get(COOKIE_SESSION_TOKEN),
             roomList: [],
-            loggedInUser: null
+            loggedInUser: maybeLoggedInUser ? JSON.parse(maybeLoggedInUser) : null
         };
+    },
+    logOut: function() {
+        //TODO: do rest logout
+
+        Cookies.remove(COOKIE_LOGGED_IN_USER);
+        Cookies.remove(COOKIE_SESSION_TOKEN);
+        this.setState( {sessionToken : null} );
     },
     setSessionToken: function(sessionToken) {
         console.log("setting sessionToken", sessionToken);
+        Cookies.set(COOKIE_SESSION_TOKEN, sessionToken, EXPIRES_OPT);
         this.setState({sessionToken: sessionToken});
 
     },
     setLoggedInUser: function(user) {
         console.log("setting logged in user to:",user.alias);
+        Cookies.set(COOKIE_LOGGED_IN_USER, JSON.stringify(user));
         this.setState({ loggedInUser: user });
     },
 
     createChatRoom: function(CH, roomId, users) {
         let roomList = this.state.roomList;
         roomList.push({cryptoHelper: CH, roomId: roomId, users: users, messages:[]});
-        this.setState({roomList: roomList});
+        this.setState({roomList: roomList})
     },
 
     updateChat: function(message, key, roomId) {
@@ -47,7 +62,6 @@ var App = React.createClass({
             }
         }
         roomList[roomIndex].messages.push({message: message, user: userAlias});
-
         this.setState({roomList:roomList});
     },
 
@@ -70,6 +84,7 @@ var App = React.createClass({
     },
 
     componentDidMount: function() {
+        window.Cookies = Cookies;
         let location = window.location.href;
         let baseUrl;
         if(location.includes('localhost:8080')){
@@ -118,7 +133,7 @@ var App = React.createClass({
         return (
             <div className='container'>
                 <div className="nav">
-                    <h1>Foliechatt_</h1>
+                    <h1>Foliechatt_</h1><button className="btn btn-default" onClick={this.logOut}>Log Out</button>
                 </div>
                 <div className="row">
                     <div className="col-md-6">

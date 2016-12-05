@@ -49,12 +49,19 @@ input {
 }
 
 .nav {
+    position: relative;
     background-color: $color1;
     border-radius: $base-rounding;
     color: $light;
     padding: 1rem;
     margin-bottom: $base-margin;
     margin-top: $base-margin*0.5;
+
+    .btn {
+        position: absolute;
+        right: $base-margin;
+        top: $base-margin;
+    }
 }
 
 .greeting {

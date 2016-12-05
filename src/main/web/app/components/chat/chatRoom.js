@@ -7,7 +7,7 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
-        baseUrl: React.PropTypes.object.isRequired,
+        baseUrl: React.PropTypes.string.isRequired,
         loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
@@ -17,21 +17,24 @@ var ChatRoom = React.createClass({
     },
 
     sendMessage: function() {
-        const content = document.getElementById('messageInput' + this.props.roomId).value;
-        console.log("trying to send: ", content);
-        const users = this.props.users;
+        const {roomId, users, cryptoHelper} = this.props;
+        const content = document.getElementById('messageInput' + roomId).value;
 
-        users.forEach( ({publicKey, userAlias}) => {
-            this.props.cryptoHelper.encrypt(content, publicKey).then(this.dispatchMessage.bind(this, userAlias))
-        } )
+        users.forEach(({publicKey, userAlias}) => {
+            cryptoHelper.encrypt(content, publicKey)
+                .then( encryptedMessage => {
+                    this.dispatchMessage(userAlias, encryptedMessage);
+                });
+        });
+        document.getElementById('messageInput' + roomId).value = '';
     },
 
-    dispatchMessage: function (userAlias, encryptedMessage) {
+    dispatchMessage: function(userAlias, encryptedMessage) {
         console.log("sending to user alias: ", userAlias);
         let roomId = this.props.roomId;
         let senderPublicKey = this.props.cryptoHelper.publicKey;
 
-        stompClient.send(`/app/hello/${roomId}` , {}, JSON.stringify({
+        stompClient.send(`/app/hello/${roomId}`, {}, JSON.stringify({
             content: encryptedMessage.data,
             sender: {
                 value: senderPublicKey
@@ -43,14 +46,11 @@ var ChatRoom = React.createClass({
     },
 
     componentWillMount: function() {
-        const publicKey = this.props.cryptoHelper.publicKey;
-        const updateChat = this.props.updateChat;
-        const updateUsers = this.props.updateUsers;
-        const roomId = this.props.roomId;
-        const loggedInUser = this.props.loggedInUser;
+        const {updateChat, updateUsers, roomId, loggedInUser, baseUrl} = this.props;
+
         const decryptWithSenderKey = this.props.cryptoHelper.decryptWithSenderKey;
 
-        let socket = new SockJS(`${this.props.baseUrl}folieSocket`);
+        let socket = new SockJS(`${baseUrl}folieSocket`);
 
         stompClient = Stomp.over(socket);
         // stompClient.debug = null;
@@ -62,43 +62,66 @@ var ChatRoom = React.createClass({
                 let content = messageBody.content;
                 let user = messageBody.sender.value;
 
-                decryptWithSenderKey(messageBody.sender.value)(content).then( function(decryptedMessage) {
-                    updateChat(decryptedMessage.data, user, roomId);
-                });
+                decryptWithSenderKey(content, messageBody.sender.value)
+                    .then( decryptedMessage =>  {
+                        updateChat(decryptedMessage.data, user, roomId);
+                    });
             });
 
-            stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom){
+            stompClient.subscribe(`/topic/greetings/${roomId}/status`, function(usersInRoom) {
                 let users = JSON.parse(usersInRoom.body);
                 updateUsers(users, roomId);
             });
         });
     },
 
-    render: function() {
-        var renderMessages = [];
-        var usersInRoom= [];
+    componentDidMount: function() {
+        const sendMessage = this.sendMessage;
+        document.getElementById('messageInput' + this.props.roomId).addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode == 13) {
+                sendMessage();
+            }
+        });
+    },
 
-        for (let i = 0; i < this.props.messages.length; i++) {
-            renderMessages[i] = <ChatMessage userName={this.props.messages[i].user} messageText={this.props.messages[i].message} key={i}/>;
+    render: function() {
+        const {messages, users, roomId} = this.props;
+        var renderMessages = [];
+        var usersInRoom = [];
+
+        for (let i = 0; i < messages.length; i++) {
+            let isLastMessage = i == messages.length -1;
+            let uniqueNodeId = 'msgId' + Math.random();
+            renderMessages[i] = <ChatMessage userName={messages[i].user} messageText={messages[i].message} key={i} shouldBaffle={isLastMessage} nodeId={uniqueNodeId}/>;
         }
 
-        for (let i = 0; i < this.props.users.length; i++) {
-            usersInRoom[i] = <li key={i}>{this.props.users[i].userAlias}</li>;
+        for (let i = 0; i < users.length; i++) {
+            usersInRoom[i] = <li key={i}>{users[i].userAlias}</li>;
         }
 
         return (
             <div className="chatRoom">
-                Users in room:
-                <ul>
-                    {usersInRoom}
-                </ul>
-
-                Chat:
-                <ul>
-                    {renderMessages}
-                </ul>
-                <input type="text" id={"messageInput" + this.props.roomId}/>
-                <button onClick={this.sendMessage}>Send!</button>
+                <div className="row">
+                    <div className="col-md-9">
+                        <div className="chatBox">
+                            <h3>Room ID: {roomId}</h3>
+                            <ul className="list">
+                                <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="userList">
+                            <h3>Users in room</h3>
+                            <ul className="list">
+                                {usersInRoom}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <input type="text" id={"messageInput" + roomId} placeholder="Type message"/>
+                <div className="btn btn-default sendButton" onClick={this.sendMessage}>Send</div>
             </div>
         );
 

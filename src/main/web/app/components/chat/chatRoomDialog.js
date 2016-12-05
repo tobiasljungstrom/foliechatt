@@ -62,13 +62,13 @@ var ChatRoomDialog = React.createClass({
 
     render : function() {
         return (
-            <div>
-                <div>
-                    <button onClick={this.createChatRoom}>Create new chatroom</button>
+            <div className="chatRoomDialog">
+                <div className='joinChatRoom'>
+                    <input type="text" name="chatRoomId" id="roomIdInput" placeholder="Enter chatroom ID"/>
+                    <div className="btn btn-default joinRoomButton" onClick={this.joinChatRoom}>Join room</div>
                 </div>
-                <div>
-                    <input type="text" name="chatRoomId" id="roomIdInput"/>
-                    <button onClick={this.joinChatRoom}>Join Room</button>
+                <div className='newChatRoom'>
+                    <div className="btn btn-default" onClick={this.createChatRoom}>Create new chatroom</div>
                 </div>
             </div>
 

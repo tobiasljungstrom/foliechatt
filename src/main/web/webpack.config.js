@@ -16,6 +16,9 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader'
+            }, {
+                test: /\.scss$/,
+                loaders: ['style', 'css', 'sass']
             }
         ]
     },
@@ -25,5 +28,7 @@ module.exports = {
         path: __dirname + '/../resources/static'
     },
 
-    plugins: [HTMLWebpackPluginConfig]
+    plugins: [HTMLWebpackPluginConfig],
+
+    devServer: { inline: true }
 };

@@ -22,7 +22,7 @@ public class MessageRouter {
     private ChatRoomService chatRoomService;
 
     @MessageMapping("/hello/{roomID}")
-    public void greeting(@DestinationVariable String roomID, Message message) throws Exception {
+    public void greeting(@DestinationVariable String roomID, Message message) {
         System.out.println("inside greeting method!");
         System.out.println("message has sender: " + message.getSender().getValue());
         System.out.println("message has receiver: " + message.getReceiver().getValue());

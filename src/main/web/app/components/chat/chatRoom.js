@@ -91,9 +91,8 @@ var ChatRoom = React.createClass({
         var usersInRoom = [];
 
         for (let i = 0; i < messages.length; i++) {
-            let isLastMessage = i == messages.length -1;
             let uniqueNodeId = 'msgId' + Math.random();
-            renderMessages[i] = <ChatMessage userName={messages[i].user} messageText={messages[i].message} key={i} shouldBaffle={isLastMessage} nodeId={uniqueNodeId}/>;
+            renderMessages[i] = <ChatMessage userName={messages[i].user} messageText={messages[i].message} key={i} nodeId={uniqueNodeId}/>;
         }
 
         for (let i = 0; i < users.length; i++) {
@@ -107,7 +106,7 @@ var ChatRoom = React.createClass({
                         <div className="chatBox">
                             <h3>Room ID: {roomId}</h3>
                             <ul className="list">
-                                <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
+                                <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready." nodeId="startMessage"/> {renderMessages}
                             </ul>
                         </div>
                     </div>

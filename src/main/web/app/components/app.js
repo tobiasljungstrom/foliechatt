@@ -1,28 +1,32 @@
 var React = require('react');
+var Cockies = require('js-cookie');
 
 var NewUser = require('./newUser');
 var LogIn = require('./logIn');
 var ChatRoom = require('./chat/chatRoom');
 var ChatRoomDialog = require('./chat/chatRoomDialog');
 var Greeting = require('./greeting');
-
-require('../css/main.scss');
+const COOKIE_SESSION_TOKEN ='sessionToken';
+const COOKIE_LOGGED_IN_USER= 'loggedInUser';
 
 var App = React.createClass({
     getInitialState: function() {
+        let maybeLoggedInUser = Cockies.get(COOKIE_LOGGED_IN_USER);
         return {
-            sessionToken: null,
+            sessionToken: Cookies.get(COOKIE_SESSION_TOKEN),
             roomList: [],
-            loggedInUser: null
+            loggedInUser: loggedInUser ? JSON.parse(loggedInUser) : null
         };
     },
     setSessionToken: function(sessionToken) {
         console.log("setting sessionToken", sessionToken);
+        Cockies.set(COOKIE_SESSION_TOKEN, sessionToken);
         this.setState({sessionToken: sessionToken});
 
     },
     setLoggedInUser: function(user) {
         console.log("setting logged in user to:",user.alias);
+        Cockies.set(COOKIE_LOGGED_IN_USER, JSON.stringify(user));
         this.setState({ loggedInUser: user });
     },
 

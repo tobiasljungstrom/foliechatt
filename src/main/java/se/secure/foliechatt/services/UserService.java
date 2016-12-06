@@ -105,7 +105,6 @@ public class UserService {
         query.setParameter("email", loginAttempt.getEmail());
         List<User> result = query.getResultList();
 
-        System.out.println("result size is: " + result.size());
         // edge cases
         if(result.isEmpty()) {
             return false;
@@ -114,8 +113,6 @@ public class UserService {
         }
 
         // actual password check
-        System.out.println("result pass = " + result.get(0).getPassword());
-        System.out.println("try pass = " + loginAttempt.getPassword());
         return result.get(0).getPassword().equals(loginAttempt.getPassword());
     }
 

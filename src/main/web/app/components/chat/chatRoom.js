@@ -45,7 +45,6 @@ var ChatRoom = React.createClass({
     },
 
     dispatchMessage: function(userAlias, encryptedMessage) {
-        console.log("sending to user alias: ", userAlias);
         let roomId = this.props.roomId;
         let senderPublicKey = this.props.cryptoHelper.publicKey;
 
@@ -61,7 +60,6 @@ var ChatRoom = React.createClass({
     },
 
     leaveRoom: function() {
-        console.log(this.props.sessionToken);
         const leaveChatRoom = this.props.leaveChatRoom;
         const roomId = this.props.roomId;
 
@@ -71,12 +69,9 @@ var ChatRoom = React.createClass({
 
             if (this.readyState == 4 && this.status == 200) {
                 leaveChatRoom(roomId);
-            } else if(this.readyState == 4 && this.status == 401) {
-                console.log('UNATHORIZED');
             }
 
         };
-        console.log("HELLO!");
         request.open('POST', `${this.props.baseUrl}api/v.1/chatroom/${this.props.roomId}/leave`, true);
         request.setRequestHeader('Content-Type', 'text/plain');
         request.setRequestHeader('sessionToken', this.props.sessionToken);
@@ -92,7 +87,7 @@ var ChatRoom = React.createClass({
         let socket = new SockJS(`${baseUrl}folieSocket`);
 
         stompClient = Stomp.over(socket);
-        // stompClient.debug = null;
+        stompClient.debug = null;
 
         stompClient.connect({}, function() {
 
@@ -156,7 +151,7 @@ var ChatRoom = React.createClass({
             usersInRoom[i] = <li key={i}>{users[i].userAlias}</li>;
         }
 
-        let validationMessage = this.state.isValidMessage ? null : <p className={ 'validation-message' }>Message too long or too short.</p>
+        let validationMessage = this.state.isValidMessage ? null : <p className={ 'validation-message' }>Message too long or too short.</p>;
         return (
             <div className="chatRoom">
                 <div className="row">

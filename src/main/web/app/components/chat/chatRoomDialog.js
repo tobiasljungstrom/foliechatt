@@ -27,9 +27,6 @@ var ChatRoomDialog = React.createClass({
             if (this.readyState == 4 && this.status == 200) {
                 var chatRoom = JSON.parse(request.responseText);
                 createChatRoom(CH, chatRoom.id, chatRoom.users);
-                console.log('Created chatroom', chatRoom);
-            } else if(this.readyState == 4 && this.status == 401) {
-                console.log('Access denied');
             }
         };
 
@@ -46,11 +43,8 @@ var ChatRoomDialog = React.createClass({
         request.onreadystatechange = function () {
             if(this.readyState == 4 && this.status == 200) {
                 var chatRoom = JSON.parse(request.responseText);
-                console.log('Created chatroom', chatRoom);
                 createChatRoom(CH, chatRoom.id, chatRoom.users);
 
-            } else if(this.readyState == 4 && this.status != 200){
-                console.log("Couldn't join room");
             }
         };
 

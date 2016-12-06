@@ -28,13 +28,8 @@ var LogIn = React.createClass({
             //Callback triggers on success
             if (this.readyState == 4 && this.status == 200) {
                 let loginResponse = JSON.parse(request.responseText);
-                console.log(loginResponse);
                 setLoggedInUser(loginResponse.user);
                 setSessionToken(loginResponse.sessionToken);
-
-                //console.log('LOG IN IS GOOD');
-            } else if(this.readyState == 4 && this.status == 401) {
-                console.log('UNATHORIZED');
             }
 
         };

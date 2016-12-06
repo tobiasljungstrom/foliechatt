@@ -14,17 +14,15 @@ var CryptoHelper = function CryptoHelper() {
         };
 
         return openpgp.generateKey(options).then(function (key) {
-            console.log("generated key pair: ", key)
             self.privateKey = key.privateKeyArmored;
             self.publicKey = key.publicKeyArmored;
-            console.log("keys are ready to use");
         });
     }
 
     this.encrypt = function(message, receiverPublicKey) {
         /*console.log("inside encrypt promise, receiver key is: ", receiverPublicKey);
         console.log("inside encrypt promise, sender key is: ", self.privateKey);*/
-        options = {
+        let options = {
             data: message,                             // input as String (or Uint8Array)
             publicKeys: openpgp.key.readArmored(receiverPublicKey).keys,  // for encryption
             privateKeys: openpgp.key.readArmored(self.privateKey).keys // for signing (optional)
@@ -44,15 +42,15 @@ var CryptoHelper = function CryptoHelper() {
 
     this.publicKeyPromise = function() {
         if(self.publicKey) {
-            return Promise.resolve(self.publicKey)
+            return Promise.resolve(self.publicKey);
         } else {
-            return new Promise(function(resolve, reject) {
+            return new Promise(function(resolve) {
                 setTimeout( function() {
                     resolve( self.publicKeyPromise() );
                 }, 100);
             });
         }
-    }
-}
+    };
+};
 
 module.exports = CryptoHelper;

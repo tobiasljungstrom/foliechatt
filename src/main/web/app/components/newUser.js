@@ -27,12 +27,9 @@ var NewUser = React.createClass({
         const request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //Callback triggers on success
-            //TODO: Do something useful here
             if (this.readyState == 4 && this.status == 200) {
-                console.log("OK"+this.responseText);
                 setState({userResponse: "User created"});
             } else {
-                console.log("User not added");
                 setState({userResponse: request.responseText});
             }
 

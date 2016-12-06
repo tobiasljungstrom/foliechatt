@@ -15,7 +15,6 @@ require('../css/main.scss');
 var App = React.createClass({
     getInitialState: function() {
         let maybeLoggedInUser = Cookies.get(COOKIE_LOGGED_IN_USER);
-        console.log("maybeLoggedINuser is:", maybeLoggedInUser);
         return {
             sessionToken: Cookies.get(COOKIE_SESSION_TOKEN),
             roomList: [],
@@ -31,10 +30,6 @@ var App = React.createClass({
                 Cookies.remove(COOKIE_LOGGED_IN_USER);
                 Cookies.remove(COOKIE_SESSION_TOKEN);
                 setState( {sessionToken : null, roomList : []} );
-
-                //console.log('LOG IN IS GOOD');
-            } else if(this.readyState == 4) {
-                console.log('UNATHORIZED');
             }
 
         };
@@ -45,13 +40,11 @@ var App = React.createClass({
 
     },
     setSessionToken: function(sessionToken) {
-        console.log("setting sessionToken", sessionToken);
         Cookies.set(COOKIE_SESSION_TOKEN, sessionToken, EXPIRES_OPT);
         this.setState({sessionToken: sessionToken});
 
     },
     setLoggedInUser: function(user) {
-        console.log("setting logged in user to:",user.alias);
         Cookies.set(COOKIE_LOGGED_IN_USER, JSON.stringify(user));
         this.setState({ loggedInUser: user });
     },
@@ -59,13 +52,12 @@ var App = React.createClass({
     createChatRoom: function(CH, roomId, users) {
         let roomList = this.state.roomList;
         roomList.push({cryptoHelper: CH, roomId: roomId, users: users, messages:[]});
-        this.setState({roomList: roomList})
+        this.setState({roomList: roomList});
     },
 
     leaveChatRoom: function(roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
-        console.log("Room index to be removed: ", roomIndex);
         roomList.splice(roomIndex, 1);
         this.setState({roomList: roomList});
     },
@@ -73,7 +65,6 @@ var App = React.createClass({
     updateChat: function(message, key, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
-        console.log("room index: ", roomIndex);
         let users = roomList[roomIndex].users;
 
         let userAlias = 'default name';
@@ -100,13 +91,11 @@ var App = React.createClass({
 
     findRoomById: function(roomId) {
         let roomList = this.state.roomList;
-        console.log("room list is", roomList);
         for (let i = 0; i < roomList.length; i++) {
             if (roomList[i].roomId == roomId) {
                 return i;
             }
         }
-        console.log("could not find room with id :", roomId);
         return null;
     },
 
@@ -116,10 +105,8 @@ var App = React.createClass({
         let baseUrl;
         if (location.includes('localhost:8080')) {
             baseUrl = 'http://localhost:9876/foliechatt/';
-            console.log('has webpack');
         } else {
             baseUrl = '/foliechatt/';
-            console.log('has not webpack', location);
         }
         this.setState({baseUrl: baseUrl});
     },

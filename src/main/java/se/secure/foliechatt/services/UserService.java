@@ -16,7 +16,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import static se.secure.foliechatt.domain.UserManager.*;
-import static se.secure.foliechatt.security.hashing.Hasher.GenerateHash;
 
 
 @SuppressWarnings("JpaQueryApiInspection")
@@ -31,7 +30,7 @@ public class UserService {
 
     public LoggedInUser addUserAsLoggedIn(User user) {
         LoggedInUser loggedInUser = new LoggedInUser(user);
-        int userIndex = indexOfLoggedInUser(user);
+        int userIndex = indexOfUserInLoggedInUser(user);
         if (userIndex > -1){
             setLoggedInUser(userIndex, loggedInUser);
             return loggedInUser;

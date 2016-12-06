@@ -20,11 +20,11 @@ public final class UserManager {
     }
 
     public static Boolean isUserInSession(User user, String sessionToken) {
-        int index = indexOfLoggedInUser(user);
+        int index = indexOfUserInLoggedInUser(user);
         return index > -1 && loggedInUsers.get(index).getSessionToken().equals(sessionToken);
     }
 
-    public static int indexOfLoggedInUser(User user) {
+    public static int indexOfUserInLoggedInUser(User user) {
         for (LoggedInUser lu: loggedInUsers) {
             if (lu.getUser().equals(user)){
                 return loggedInUsers.indexOf(lu);
@@ -43,7 +43,7 @@ public final class UserManager {
     }
 
     public static Boolean removeLoggedInUser (User user){
-        int userIndex = indexOfLoggedInUser(user);
+        int userIndex = indexOfUserInLoggedInUser(user);
         if (userIndex > -1){
             loggedInUsers.remove(userIndex);
             return true;

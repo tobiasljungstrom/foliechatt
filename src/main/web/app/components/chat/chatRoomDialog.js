@@ -54,7 +54,7 @@ var ChatRoomDialog = React.createClass({
             }
         };
 
-        request.open('POST', `${this.props.baseUrl}api/v.1/chatroom/${roomId}`);
+        request.open('POST', `${this.props.baseUrl}api/v.1/chatroom/join/${roomId}`);
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('sessionToken', this.props.sessionToken);
         request.send(publicKey);

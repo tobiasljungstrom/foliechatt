@@ -26,7 +26,7 @@ public final class UserManager {
 
     public static int indexOfUserInLoggedInUser(User user) {
         for (LoggedInUser lu: loggedInUsers) {
-            if (lu.getUser().equals(user)){
+            if (lu.getUser().getId().equals(user.getId())){
                 return loggedInUsers.indexOf(lu);
             }
         }

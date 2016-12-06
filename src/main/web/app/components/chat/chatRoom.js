@@ -2,6 +2,8 @@ var React = require('react');
 var ChatMessage = require('./chatMessage');
 var SockJS = require('sockjs-client');
 var Stomp = require('stompjs/lib/stomp.js').Stomp;
+const MESSAGE_HIGHER_LENGTH_LIMIT = 40;
+const MESSAGE_LOWER_LENGTH_LIMIT = 1;
 
 var stompClient = null;
 
@@ -18,7 +20,15 @@ var ChatRoom = React.createClass({
         roomId: React.PropTypes.string.isRequired
     },
 
+    getInitialState: function() {
+        return {
+            isValidMessage : false
+        };
+    },
+
     sendMessage: function() {
+        if(!this.messageLengthValid()) return;
+
         const {roomId, users, cryptoHelper} = this.props;
         const content = document.getElementById('messageInput' + roomId).value;
 
@@ -29,6 +39,9 @@ var ChatRoom = React.createClass({
                 });
         });
         document.getElementById('messageInput' + roomId).value = '';
+        this.setState( {
+            isValidMessage: false
+        });
     },
 
     dispatchMessage: function(userAlias, encryptedMessage) {
@@ -111,6 +124,24 @@ var ChatRoom = React.createClass({
         });
     },
 
+    messageLengthValid: function() {
+        const {roomId} = this.props;
+        let messageLength = document.getElementById("messageInput" + roomId).value.length;
+        let validMessage = false;
+        if(messageLength >= MESSAGE_LOWER_LENGTH_LIMIT && messageLength <= MESSAGE_HIGHER_LENGTH_LIMIT) {
+            validMessage = true;
+        }
+        return validMessage;
+    },
+
+    inputChangeHandler: function() {
+
+        this.setState({
+            isValidMessage: this.messageLengthValid()
+        });
+
+    },
+
     render: function() {
         const {messages, users, roomId} = this.props;
         var renderMessages = [];
@@ -125,6 +156,7 @@ var ChatRoom = React.createClass({
             usersInRoom[i] = <li key={i}>{users[i].userAlias}</li>;
         }
 
+        let validationMessage = this.state.isValidMessage ? null : <p className={ 'validation-message' }>Message too long or too short.</p>
         return (
             <div className="chatRoom">
                 <div className="row">
@@ -147,8 +179,9 @@ var ChatRoom = React.createClass({
                         </div>
                     </div>
                 </div>
-                <input type="text" id={"messageInput" + roomId} placeholder="Type message"/>
-                <div className="btn btn-default sendButton" onClick={this.sendMessage}>Send</div>
+                <input type="text" id={"messageInput" + roomId} placeholder="Type message" onChange={ this.inputChangeHandler } />
+                <button className="btn btn-default sendButton" onClick={this.sendMessage} disabled={ !this.state.isValidMessage }>Send</button>
+                { validationMessage }
             </div>
         );
 

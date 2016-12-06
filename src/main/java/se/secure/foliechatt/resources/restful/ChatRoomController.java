@@ -31,7 +31,7 @@ public class ChatRoomController {
     }
 
 
-    @RequestMapping(value = "/join/{roomId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/join/{roomId}", method = RequestMethod.PUT)
     public ResponseEntity joinChatRoom(@RequestHeader(name="sessionToken", required = true) String sessionToken, @PathVariable String roomId, @RequestBody String publicKey) {
         User user = UserManager.getUserBySessionToken(sessionToken);
         if(user == null) {

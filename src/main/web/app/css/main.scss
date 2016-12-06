@@ -44,6 +44,19 @@ form {
     }
 }
 
+.chatHeader {
+    position: relative;
+    h3 {
+    padding-bottom: $base-margin * 2;    
+    }
+
+    button {
+        position: absolute;
+        right: $base-margin;
+        top: 0;
+    }
+}
+
 input {
     padding: $base-margin*0.3;
 }

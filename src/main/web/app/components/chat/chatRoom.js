@@ -48,16 +48,16 @@ var ChatRoom = React.createClass({
     },
 
     leaveRoom: function() {
-        console.log("In leavechatroom");
         console.log(this.props.sessionToken);
         const leaveChatRoom = this.props.leaveChatRoom;
+        const roomId = this.props.roomId;
 
         const request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //Callback triggers on success
+
             if (this.readyState == 4 && this.status == 200) {
-                leaveChatRoom(this.props.roomId);
-                console.log('Left chatroom with id '+roomId);
+                leaveChatRoom(roomId);
             } else if(this.readyState == 4 && this.status == 401) {
                 console.log('UNATHORIZED');
             }
@@ -131,7 +131,9 @@ var ChatRoom = React.createClass({
                 <div className="row">
                     <div className="col-md-9">
                         <div className="chatBox">
-                            <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveRoom}>Leave</button>
+                            <div className="chatHeader">
+                                <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveRoom}>Leave</button>
+                            </div>
                             <ul className="list">
                                 <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready."/> {renderMessages}
                             </ul>

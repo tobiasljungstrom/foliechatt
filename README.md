@@ -10,6 +10,8 @@ We have chosen to implement a user database, where we store users with a unique 
 
 The passwords are stored in salted hash values using the **SHA512** hasing algorithm.
 
+When a user wants to create a new account or log in to an existing account the data should be sent via an **SSL-encrypted connection**. This must be configured (and prefereably certified) on the hosting server.
+
 ##Key distribution
 We've opted for an implementation of **public key cryptography**, using our backend as a **public key server**. Each chat room keeps a list of the users participating in it, where each entry is the user alias and it's corresponding public key. This list is then shared with all the participants of the room.
 ##Message encryption
@@ -18,8 +20,19 @@ When a user wants to send a message, the text will be encrypted with **OpenPGP**
 When a message is sent, the sender of the message will themselves be on the list of recipients. When the sender recieves, decrypts, and displayes the message they just sent, this is an indication that everything went all right.
 #Known issues
 * Nothing prevents a user from entering a weak password
-* 
+* Nothing in the server-side software prevents a brute force attack or repeated failed log in attempts.
+* We've implemented our own system of keeping track of logged in users sessions. This might be weak in comparison to established security solutions (although they might be more than we need).
+* We have no tests. Father, forgive us.
+
 #Future features
 * Proper logging
+* Using a randomised or hashed value for message addressing, so as to rely less on user defined values for routing.
+* Inviting users to rooms via username
+* Private rooms with user access control
+* List of public rooms
 
 #Contributors
+* [Henrik Bohlin](https://gitlab.com/HenrikBohlin)
+* [Marco Fält](https://gitlab.com/marco.falt)
+* [Tobias Ljungström](https://github.com/tobiasljungstrom)
+* [Erik Wiberg](https://gitlab.com/erik-wiberg-87)

@@ -12,14 +12,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        System.out.println("running message broker!");
         config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        System.out.println("registering stomp endpoint");
         registry.addEndpoint("/folieSocket").setAllowedOrigins("*").withSockJS();
     }
 }

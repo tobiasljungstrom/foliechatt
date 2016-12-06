@@ -7,7 +7,6 @@ import se.secure.foliechatt.services.ChatRoomService;
 import java.util.*;
 
 public class ChatRoom {
-
     private static final int CHATROOM_ID_LENGTH = 10;
 
     private String id;

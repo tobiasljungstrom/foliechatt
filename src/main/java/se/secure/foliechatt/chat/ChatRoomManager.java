@@ -34,7 +34,6 @@ public final class ChatRoomManager {
     }
 
     public static ChatRoom getChatRoomById(String id) {
-        System.out.println("getting chatroom with id " + id);
         for (ChatRoom chatRoom: chatRooms) {
             if (chatRoom.getId().equals(id)){
                 return chatRoom;

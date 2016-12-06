@@ -62,6 +62,14 @@ var App = React.createClass({
         this.setState({roomList: roomList})
     },
 
+    leaveChatRoom: function(roomId) {
+        let roomList = this.state.roomList;
+        let roomIndex = this.findRoomById(roomId);
+        console.log("Room index to be removed: ", roomIndex);
+        roomList.splice(roomIndex, 1);
+        this.setState({roomList: roomList});
+    },
+
     updateChat: function(message, key, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
@@ -83,26 +91,30 @@ var App = React.createClass({
     updateUsers: function(users, roomId) {
         let roomList = this.state.roomList;
         let roomIndex = this.findRoomById(roomId);
-        roomList[roomIndex].users = users;
-        this.setState({roomList: roomList});
+        if (roomIndex != null) {
+            roomList[roomIndex].users = users;
+            this.setState({roomList: roomList});
+
+        }
     },
 
     findRoomById: function(roomId) {
         let roomList = this.state.roomList;
         console.log("room list is", roomList);
-        for(let i = 0; i<roomList.length; i++){
-            if(roomList[i].roomId == roomId){
+        for (let i = 0; i < roomList.length; i++) {
+            if (roomList[i].roomId == roomId) {
                 return i;
             }
         }
         console.log("could not find room with id :", roomId);
+        return null;
     },
 
     componentDidMount: function() {
         window.Cookies = Cookies;
         let location = window.location.href;
         let baseUrl;
-        if(location.includes('localhost:8080')){
+        if (location.includes('localhost:8080')) {
             baseUrl = 'http://localhost:9876/foliechatt/';
             console.log('has webpack');
         } else {
@@ -121,7 +133,7 @@ var App = React.createClass({
         let greeting = null;
 
         if (!this.state.sessionToken) {
-            login = <LogIn baseUrl={this.state.baseUrl} setLoggedInUser={ this.setLoggedInUser } setSessionToken={this.setSessionToken}/>;
+            login = <LogIn baseUrl={this.state.baseUrl} setLoggedInUser={this.setLoggedInUser} setSessionToken={this.setSessionToken}/>;
             newUser = <NewUser baseUrl={this.state.baseUrl}/>;
         } else {
             chatRoomDialog = <ChatRoomDialog sessionToken={this.state.sessionToken} createChatRoom={this.createChatRoom} baseUrl={this.state.baseUrl}/>;
@@ -142,8 +154,6 @@ var App = React.createClass({
                     updateUsers={this.updateUsers}/>;
             });
         }
-
-
 
         return (
             <div className='container'>

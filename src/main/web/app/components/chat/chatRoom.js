@@ -7,12 +7,14 @@ var stompClient = null;
 
 var ChatRoom = React.createClass({
     propTypes: {
+        sessionToken: React.PropTypes.string,
         baseUrl: React.PropTypes.string.isRequired,
         loggedInUser: React.PropTypes.object.isRequired,
         users: React.PropTypes.array.isRequired,
         messages: React.PropTypes.array.isRequired,
         updateChat: React.PropTypes.func.isRequired,
         cryptoHelper: React.PropTypes.object.isRequired,
+        leaveChatRoom: React.PropTypes.func.isRequired,
         roomId: React.PropTypes.string.isRequired
     },
 
@@ -43,6 +45,30 @@ var ChatRoom = React.createClass({
                 value: userAlias
             }
         }));
+    },
+
+    leaveRoom: function() {
+        console.log(this.props.sessionToken);
+        const leaveChatRoom = this.props.leaveChatRoom;
+        const roomId = this.props.roomId;
+
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //Callback triggers on success
+
+            if (this.readyState == 4 && this.status == 200) {
+                leaveChatRoom(roomId);
+            } else if(this.readyState == 4 && this.status == 401) {
+                console.log('UNATHORIZED');
+            }
+
+        };
+        console.log("HELLO!");
+        request.open('POST', `${this.props.baseUrl}api/v.1/chatroom/${this.props.roomId}/leave`, true);
+        request.setRequestHeader('Content-Type', 'text/plain');
+        request.setRequestHeader('sessionToken', this.props.sessionToken);
+        request.send();
+
     },
 
     componentWillMount: function() {
@@ -104,7 +130,9 @@ var ChatRoom = React.createClass({
                 <div className="row">
                     <div className="col-md-9">
                         <div className="chatBox">
-                            <h3>Room ID: {roomId}</h3>
+                            <div className="chatHeader">
+                                <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveRoom}>Leave</button>
+                            </div>
                             <ul className="list">
                                 <ChatMessage userName="foliechat" messageText="Encryption keys generated, chat ready." nodeId="startMessage"/> {renderMessages}
                             </ul>

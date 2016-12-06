@@ -5,6 +5,10 @@ var NewUser = React.createClass({
         baseUrl: React.PropTypes.string
     },
 
+    getInitialState: function () {
+        return {userResponse: ''};
+    },
+
     submitNewUser: function() {
         const newUserForm = document.getElementById('newUserForm');
 
@@ -12,7 +16,7 @@ var NewUser = React.createClass({
         const alias = newUserForm.elements['aliasInput'].value;
         const email = newUserForm.elements['emailInput'].value;
         const password = newUserForm.elements['passwordInput'].value;
-
+        const setState = this.setState.bind(this);
         //Create the data object that will be sent to the backend
         const data = JSON.stringify({
             alias:alias,
@@ -25,7 +29,11 @@ var NewUser = React.createClass({
             //Callback triggers on success
             //TODO: Do something useful here
             if (this.readyState == 4 && this.status == 200) {
-                //console.log(this.responseText);
+                console.log("OK"+this.responseText);
+                setState({userResponse: "User created"});
+            } else {
+                console.log("User not added");
+                setState({userResponse: request.responseText});
             }
 
         };
@@ -55,6 +63,9 @@ var NewUser = React.createClass({
                         <tr>
                             <td></td>
                             <td><div className="btn btn-default" onClick={this.submitNewUser}>Submit</div></td>
+                        </tr>
+                        <tr>
+                            <td>{this.state.userResponse}</td>
                         </tr>
                     </tbody>
                 </table>

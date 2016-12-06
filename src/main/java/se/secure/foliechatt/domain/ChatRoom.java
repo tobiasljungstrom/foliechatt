@@ -2,6 +2,7 @@ package se.secure.foliechatt.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.secure.foliechatt.security.encryption.PublicKey;
+import se.secure.foliechatt.services.ChatRoomService;
 
 import java.util.*;
 
@@ -15,6 +16,8 @@ public class ChatRoom {
     private List<Chatter> chatters;
     @JsonIgnore
     private List<User> allowedUsers;
+
+
 
     public ChatRoom(User initialUser, String publicKey) {
         this.id = generateUniqueChatRoomId();
@@ -38,6 +41,7 @@ public class ChatRoom {
     private void inviteUser(User user) {
         allowedUsers.add(user);
     }
+
 
     public Boolean isUserInChatRoom(User user) {
         int index = indexOfUserInChatters(user);
@@ -63,10 +67,17 @@ public class ChatRoom {
     }
 
     public void addChatter(User user, String publicKey) {
-        if (indexOfPublicKeyInChatters(publicKey) > -1) {
-            chatters.set(indexOfPublicKeyInChatters(publicKey), new Chatter(user, publicKey));
+        if (isUserInChatRoom(user)){
+            chatters.set(indexOfUserInChatters(user), new Chatter(user, publicKey));
         }
         chatters.add(new Chatter(user, publicKey));
+    }
+
+    public void setChatter(User user, String publicKey) {
+        int index = indexOfUserInChatters(user);
+        if (index > -1) {
+            chatters.set(index, new Chatter(user, publicKey));
+        }
     }
 
     public List<Chatter> getUsers() {

@@ -15,17 +15,19 @@ public class ChatRoomService {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    public List<Chatter> newChatterInRoom(User user, String publicKey, String roomId) {
-
+    public List<Chatter> newChatterInRoom(String roomId) {
         ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomId);
-        chatRoom.addChatter(user, publicKey);
         List<Chatter> chatters = chatRoom.getUsers();
-
         //TODO: Use the resource instead of directly calling template
         simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomId + "/status", chatters);
-
         return chatters;
+    }
 
+    public List<Chatter> oldChatterInRoom(String roomId, User user) {
+        ChatRoom chatRoom = ChatRoomManager.getChatRoomById(roomId);
+        List<Chatter> chatters = chatRoom.getUsers();
+        simpMessagingTemplate.convertAndSend("/topic/greetings/" + roomId + "/" + user.getAlias(), chatters);
+        return chatters;
     }
 
     public void leaveChatroom(User user, String roomId) {

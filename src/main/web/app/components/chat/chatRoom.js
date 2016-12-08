@@ -123,6 +123,19 @@ var ChatRoom = React.createClass({
             }
         });
     },
+    componentWillUpdate: function() {
+      var node = this.refs.chatBox;
+      this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight+10;
+    },
+
+    componentDidUpdate: function() {
+        console.log("do it maybe!");
+      if (this.shouldScrollBottom) {
+        console.log("do it!");
+        var node = this.refs.chatBox;
+        node.scrollTop = node.scrollHeight
+      }
+    },
 
     messageLengthValid: function() {
         const {roomId} = this.props;
@@ -161,7 +174,7 @@ var ChatRoom = React.createClass({
             <div className="chatRoom">
                 <div className="row">
                     <div className="col-md-9">
-                        <div className="chatBox">
+                        <div className="chatBox" ref="chatBox">
                             <div className="chatHeader">
                                 <h3>Room ID: {roomId}</h3> <button className='btn btn-default' onClick={this.leaveRoom}>Leave</button>
                             </div>

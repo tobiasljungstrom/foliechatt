@@ -47,7 +47,7 @@ form {
 .chatHeader {
     position: relative;
     h3 {
-    padding-bottom: $base-margin * 2;    
+    padding-bottom: $base-margin * 2;
     }
 
     button {
@@ -113,6 +113,11 @@ input {
     .sendButton {
         margin: $base-margin;
     }
+}
+
+.chatBox {
+    overflow: scroll;
+    max-height: 300px;
 }
 
 .chatMessage {
